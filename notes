@@ -37,3 +37,5 @@ K8S
 # - storage class: a way to provision storage resources from a pod
 # - cluster autoscaler: a way to automatically scale the cluster based on resource utilization
 # - kubernetes dashboard: a web-based interface for managing the cluster
+
+
