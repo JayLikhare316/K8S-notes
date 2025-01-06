@@ -1,3 +1,39 @@
 K8S
 
 ## 06 - 01 - 2025
+
+## kubernetes architecture
+
+
+# kubernetes architecture is based on the following components:
+# - control plane: responsible for managing the cluster, including creating and deleting nodes, managing the network
+# - worker nodes: run the actual containers and provide the resources needed to run the containers
+# - etcd: a distributed key-value store that stores the cluster's state and configuration
+# - api server: exposes the kubernetes api and handles requests from users and other components
+# - controller manager: runs controllers that manage the cluster's state and enforce policies
+# - scheduler: responsible for scheduling pods onto nodes based on resource availability and other factors
+# - kubelet: runs on each node and is responsible for managing the node's resources and running
+# - container runtime: responsible for running containers on the node
+# - network policies: define how pods can communicate with each other and with external services
+# - persistent storage: provides persistent storage for data that needs to be retained across pod restarts
+# - ingress: provides a way to expose services to the outside world
+# - service: provides a way to access services from within the cluster
+# - pod: the basic execution unit in kubernetes, a pod is a logical host for on
+# - deployment: a way to manage the rollout of new versions of an application
+# - replica set: ensures that a specified number of replicas of a pod are running at any giv
+# - daemon set: ensures that a specified number of replicas of a pod are running at any giv
+# - job: a way to run a batch of tasks and ensure that they are completed successfully
+# - persistent volume claim: a way to request storage resources from the cluster
+# - persistent volume: a way to provision storage resources from a pod
+# - config map: a way to store and retrieve configuration data
+# - secret: a way to store and retrieve sensitive data
+# - service account: a way to authenticate and authorize pods to access cluster resources
+# - cluster role: a way to define permissions for a cluster
+# - cluster role binding: a way to bind a cluster role to a user or service account
+# - namespace: a way to organize resources into logical groups
+# - resource quota: a way to limit the amount of resources that a namespace can consume
+# - pod security policy: a way to define security policies for pods
+# - network policy: a way to define how pods can communicate with each other and with external services
+# - storage class: a way to provision storage resources from a pod
+# - cluster autoscaler: a way to automatically scale the cluster based on resource utilization
+# - kubernetes dashboard: a web-based interface for managing the cluster
