@@ -24,3 +24,6 @@ Q.Architecture of kubernetes?
 - etcd: responsible for storing the state of the cluster
 - the data plane consists of the following components:
 
+Q. what are nodes in k8s ?
+- a node is a machine or a virtual machine that runs a pod[ec2 instances, VMs ,Containers]
+- a node can be a physical machine or a virtual machine
