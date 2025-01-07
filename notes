@@ -63,10 +63,64 @@ Q.Difference between kubelet and kubeproxy?
 =========================================================================================================================================================================
 | Aspect	        |                         Kubelet                                          |       Kube-proxy                                                         |
 |-----------------|--------------------------------------------------------------------------|---------------------------------------------------------------------------
-| Purpose	        | Manages containers and pods on a node.            	                     | Manages network rules and traffic routing for services.                  |
+| Purpose	        | Manages containers and pods on a node.            	    7                 | Manages network rules and traffic routing for services.                  |
 | Scope           | Node-level: Focuses on running containers and pods on a single node.	   | Network-level: Focuses on enabling communication between pods/services.  |
 | Interaction	    | Works with the container runtime (e.g., Docker, containerd).	           | Works with network rules (e.g., IP tables, IPVS).                        |
 | Responsibility	| Ensures containers are running as per PodSpecs.	                         | Ensures traffic is routed correctly to pods based on Service definitions.|
 | Dependency	    | Directly interacts with the Kubernetes API server and container runtime. | Relies on the Kubernetes API server for Service and Endpoint updates.    |
 =========================================================================================================================================================================
 
+## Creation Of cluster:-[kubernetes]
+
+launch an ec2 instance --> with admin role
+install kubectl on ec2 instance --> from AWS
+curl -O ############
+chmod -x ./kubectl
+
+
+eksctl create cluster --name irondome -node-type t2.medium --nodes 2 --region=us-east-1
+kubectl get nodes --> to get nodes
+
+pod 
+rs 
+deploy
+
+services: 
+  lb
+  np -->nide port
+  cip -->cluster ip
+
+config:
+  services
+  cmp
+
+resources:-
+
+
+## Manifest syntax:-{interview question}
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+
+
+client cluster can work on maximum -2 version ,if not you have to update the cluster. industry standards is -1.
+alias k=kubectl -->to change the name of kubectl to k.
+
+>>>task :- how to set permanent alias
+
+k get pods -A --> to see all pods 
+vim pod.yaml --> menifest file
+k apply -f pod.yaml --> to apply menifest
+k get po --> small commands to see pods
+k describe po nginx --> to describe pods nginx
+
+>>>task
+need to perform lamp server.
