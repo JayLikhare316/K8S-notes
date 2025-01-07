@@ -1,72 +1,136 @@
-## K8S
-
-Q.What is kubernetes?
+#Q. what is Kuberentes?
 
 - an open-source container orchestration system for automating the deployment, scaling, and management of container
 - it was originally designed by google, and is now maintained by the cloud native computing foundation
 - it allows for the deployment of applications and services in a scalable and highly available manner
 - it provides a lot of features such as self-healing, load balancing, and resource management
-- it is widely used in cloud computing and enterprise environments
-- it is also used in edge computing and IoT environments
-- it is a complex system that requires a lot of knowledge and expertise to use
-- it is a multi-cloud platform that can run on multiple cloud providers such as AWS, GCP
 - it is a hybrid cloud platform that can run on-premises and in the cloud
 
-Q.Architecture of kubernetes?
+## Kubernetes Architrcture
+ # components:-
+  Control Plane/Master Node
+   Kube API server
+   Etcd
+   Scheduler
+   Controller Manager
+  Worker Node
+   Kubelet
+   Kube Proxy
+   Container runtime
+   Pods
 
-- it consists of a control plane and a data plane
-- the control plane is responsible for managing the cluster and making decisions
-- the data plane is responsible for running the applications and services
-- the control plane consists of the following components:
-- api server: responsible for exposing the kubernetes api
-- controller manager: responsible for managing the state of the cluster
-- scheduler: responsible for scheduling pods onto nodes
-- etcd: responsible for storing the state of the cluster
-- the data plane consists of the following components:
+ # Master Node (Control Plane)
+ The brain of Kubernetes, managing the entire cluster.
+ Key Components:-
+  1. API Server
+     - Acts as the front door for the cluster.
+     - Processes commands from users (kubectl) or other tools.
+     - Communicates with all other components.
+     - Ensures security and authentication.
+    
+  2. Scheduler
+     - Decides which worker node will run a new pod.
+     - Matches resources (CPU, memory) with pod requirements.
+     - Ensures workload is evenly distributed.
+    
+  3. Controller Manager
+     - Monitors the cluster to ensure the desired state is met.
+     - Restarts pods if they crash.
+     - Handles tasks like scaling and maintaining services.
+    
+  4. etcd
+     - A key-value store that holds all cluster data.
+     - Keeps track of the cluster’s state and configuration.
+     - Highly available and distributed.
+  
+ # Worker Node
+ Where your application runs.
+ Key Components:-
+  1. Kubelet
+   - The worker node’s "agent."
+   - Ensures containers are running as per instructions from the master node.
+   - Communicates with the API Server.
+  
+  2. Kube-Proxy
+   - Manages network rules and routes traffic to the right pod.
+   - Ensures pods within the cluster can communicate.
+   - Handles services like load balancing.
 
-Q. What are nodes in k8s ?
-- a node is a machine or a virtual machine that runs a pod[ec2 instances, VMs ,Containers]
-- a node can be a physical machine or a virtual machine
+  3. Container Runtime
+   - Runs containers on the worker node.
+   - Examples: Docker, containerd, CRI-O.
+   - Executes, stops, and monitors the containers.  
 
-Q. What is control plane?
-- the control plane is the component of the kubernetes cluster that is responsible for managing the cluster and
-making decisions
-- it consists of the following components:
-- api server
-- controller manager
-- scheduler
-- etcd
-- it is responsible for managing the state of the cluster and making decisions
-- it is the brain of the kubernetes cluster
-- it is responsible for scheduling pods onto nodes
-- it is responsible for managing the lifecycle of pods
-- it is responsible for managing the resources of the cluster
-- it is responsible for managing the security of the cluster
-- it is responsible for managing the networking of the cluster
-- it is responsible for managing the storage of the cluster
-- it is responsible for managing the monitoring of the cluster
-- it is responsible for managing the logging of the cluster
-- it is responsible for managing the alerting of the cluster
-- it is responsible for managing the backup and restore of the cluster
-- it is responsible for managing the upgrade and patching of the cluster
-- it is responsible for managing the compliance of the cluster
-- it is responsible for managing the governance of the cluster
+  4. Pod
+   - A pod is the basic building block in Kubernetes.
+   - Pods are temporary by design. Kubernetes can destroy and recreate pods to maintain the desired state or in response to failures.
+   - Containers in the same pod share resources such as networking and storage.
 
 
-Q.What are the pods?
-- a pod is the basic execution unit in kubernetes
-- a pod is a logical host for one or more containers
-- a pod is a group of one or more containers that are run on a node and share resources
+## Steps to install kubernetes
+ (reference - https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
 
-Q.Difference between kubelet and kubeproxy?
+ # To install 'kubectl'
+  curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.6/2024-11-15/bin/linux/amd64/kubectl
+  chmod +x ./kubectl
+  mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 
-=========================================================================================================================================================================
-| Aspect	        |                         Kubelet                                          |       Kube-proxy                                                         |
-|-----------------|--------------------------------------------------------------------------|---------------------------------------------------------------------------
-| Purpose	        | Manages containers and pods on a node.            	                     | Manages network rules and traffic routing for services.                  |
-| Scope           | Node-level: Focuses on running containers and pods on a single node.	   | Network-level: Focuses on enabling communication between pods/services.  |
-| Interaction	    | Works with the container runtime (e.g., Docker, containerd).	           | Works with network rules (e.g., IP tables, IPVS).                        |
-| Responsibility	| Ensures containers are running as per PodSpecs.	                         | Ensures traffic is routed correctly to pods based on Service definitions.|
-| Dependency	    | Directly interacts with the Kubernetes API server and container runtime. | Relies on the Kubernetes API server for Service and Endpoint updates.    |
-=========================================================================================================================================================================
+ # To install 'eksctl'
+  ARCH=amd64
+  PLATFORM=$(uname -s)_$ARCH
+  curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+  curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_checksums.txt" | grep $PLATFORM | sha256sum --check
+  tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+  sudo mv /tmp/eksctl /usr/local/bin
 
+
+## Commands
+  # To run a 'cluster' from CLI
+   Give a IAM role of admin to the ec2 instance to create a cluster from CLI.
+   eksctl create cluster --name <our_name> --node-type <node/instance_type> --nodes <no._of_nodes> --region=<region>
+
+  kubectl get pods -A --> to see all pods 
+  vim pod.yaml --> pod manifest file
+  kubectl apply -f pod.yaml --> to apply manifest
+  kubectl get pod/po --> small commands to see pods
+  kubectl describe pod/po nginx --> to describe pods nginx 
+
+# Manifest
+ Pod 
+ RS 
+ Deployment
+ SERVICES
+  LB
+  NP
+  CLP
+ Confg
+  services
+  CMP
+ Namespace
+ Resource replca
+
+ ingress
+ volumes
+ HPD
+
+
+ # POD Maifest syntax: (interview question)
+ apiVersion: v1
+ kind: Pod
+ metadata:
+  name: nginx
+ spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+
+client and cluster can work on version that are 1 or 2 version apart not more than that.
+
+temporary alias set --> alias k=kubectl
+create permenant alias --> edit /etc/bashrc and add alias k=kubectl at the bottom
+
+# task
+ perform/implement lamp server
