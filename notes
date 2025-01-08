@@ -1,10 +1,12 @@
 #Q. what is Kuberentes?
-
 - an open-source container orchestration system for automating the deployment, scaling, and management of container
 - it was originally designed by google, and is now maintained by the cloud native computing foundation
 - it allows for the deployment of applications and services in a scalable and highly available manner
 - it provides a lot of features such as self-healing, load balancing, and resource management
 - it is a hybrid cloud platform that can run on-premises and in the cloud
+- kubernetes have self managing and self healing ability once deployed correctly.
+- we can also use upto 100% of our resources in kubernetes.
+- 
 
 ## Kubernetes Architrcture
  # components:-
