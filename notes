@@ -274,12 +274,6 @@ kubectl get pods     --- to get information about created pods
 client version can be only -1 oe -2 by kubernetes version
 
 
-
-
-
-
-
-
 ##task 
 set permanent alias in linux 
 
