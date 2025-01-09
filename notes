@@ -291,3 +291,7 @@ Replica Set is a type of controller that automatically manages the number of rep
 maintain the desired state.
 
 node<Deployment<Replicaset<pods
+
+
+#imperative /declrative 
+#commands / manifest
