@@ -93,6 +93,8 @@ sudo mv /tmp/eksctl /usr/local/bin
   # To run a 'cluster' from CLI
    ** Give a IAM role of admin to the ec2 instance to create a cluster from CLI.
    eksctl create cluster --name <our_name> --node-type <node/instance_type> --nodes <no._of_nodes> --region=<region>
+  # To delete a cluster from CLI
+   eksctl delete cluster --name <our_name> --region=<region>
 
   kubectl get pods -A --> to see all pods 
   vim pod.yaml --> pod manifest file
@@ -142,29 +144,32 @@ create permenant alias --> edit /etc/bashrc and add alias k=kubectl at the botto
  automatically make a new pod. 
  Uses label selectors to identify which pods it manages.
 
- demo replicaset file:-
- filename --> replicaset.yaml
- apiVersion: apps/v1
- kind: ReplicaSet
- metadata:
-  name: frontend
+#demo replicaset file:-
+filename --> replicaset.yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx
   labels:
-    app: guestbook
-    tier: frontend
- spec:
-  # modify replicas according to your case
+    app: nginx-rs
+spec:
   replicas: 3
   selector:
     matchLabels:
-      tier: frontend
+      app: nginx-rs
   template:
     metadata:
       labels:
-        tier: frontend
+        app: nginx-rs
     spec:
       containers:
-      - name: php-redis
-        image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+command to list replicaset --> kubectl get rs
+** command to scale replicaset --> kubectl scale --replicas=(no._of_pods) rs/(RS_name) **
 
 
 # Deployment
@@ -177,15 +182,15 @@ create permenant alias --> edit /etc/bashrc and add alias k=kubectl at the botto
  We can make changes to our go back to previous changes in deployment.
  command --> kubectl rollout undo deployment/(deployment_name)
 
- demo deployment file:-
- filename --> deployment.yaml
- apiVersion: apps/v1
- kind: Deployment
- metadata:
+#demo deployment file:-
+filename --> deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: nginx-deployment
   labels:
     app: nginx
- spec:
+spec:
   replicas: 3
   selector:
     matchLabels:
@@ -200,6 +205,8 @@ create permenant alias --> edit /etc/bashrc and add alias k=kubectl at the botto
         image: nginx:1.14.2
         ports:
         - containerPort: 80
+
+command to list deployments --> kubectl get deploy/deployment/deployments
 
 # Hirerchy--> deployment -> ReplicaSet -> pod (deploy creates replicaset which then creates pods)       
 kubctl api-resources --> to check all the api resources available in the cluster.
