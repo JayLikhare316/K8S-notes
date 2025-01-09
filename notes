@@ -112,6 +112,8 @@ Q.Difference between kubelet and kubeproxy?
   kubectl apply -f pod.yaml --> to apply manifest
   kubectl get pod/po --> small commands to see pods
   kubectl describe pod/po nginx --> to describe pods nginx 
+  kubectl get rs --> to see all replica sets
+  kubectl get deployments --> to see all deployments
 
 # Manifest
  Pod 
@@ -152,3 +154,51 @@ alias k=kubectl -->to change the name of kubectl to k.
 
 >>>task
 need to perform lamp server.
+
+
+## ReplicaSet:-
+
+RS is used to maintain the number of replicas of a pod.
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5
+        ports:
+        - containerPort: 80
+
+
+## Deployment:-
+
+Deployment is used to maintain the number of replicas of a pod.
+
+Deploy -> ReplicaSet -> pods [deployment k andar aati hai replica set & replicaset k ander aate hai pods]
+
+## Services:-
+
+type:
+  LB -> LoadBalancer
+  NP -> NodePort
+  CIP -> ClusterIP
+
+#imperative / declarative
+#commands   / manifest
+
+>>>task --> complete Pod ,RS ,Deploy
