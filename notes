@@ -273,10 +273,21 @@ kubectl get pods     --- to get information about created pods
 
 client version can be only -1 oe -2 by kubernetes version
 
-
 ##task 
 set permanent alias in linux 
 
-
+##task
 perform/implement lamp server
 
+##Deployment and replica
+
+##Replica Set (RS)
+Replica Set is a resource in Kubernetes that ensures a specified number of replicas (i.e., copies
+of a pod) are running at any given time. It is a type of controller that automatically manages
+the number of replicas of a pod to maintain the desired state.
+Replica Set is used to ensure that a specified number of replicas of a pod are running at any
+given time.
+Replica Set is a type of controller that automatically manages the number of replicas of a pod to
+maintain the desired state.
+
+node<Deployment<Replicaset<pods
