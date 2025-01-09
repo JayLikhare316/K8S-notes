@@ -12,13 +12,23 @@ K8S
 # - api server: exposes the kubernetes api and handles requests from users and other components
 # - controller manager: runs controllers that manage the cluster's state and enforce policies
 # - scheduler: responsible for scheduling pods onto nodes based on resource availability and other factors
-# - kubelet: runs on each node and is responsible for managing the node's resources and running
+# - kube-proxy: a network proxy that provides network connectivity between pods and services
+# - kubelet: runs on each node and is responsible for managing the node's resources and running and it shares all information to api server and also send health check to api server
+# - cni : container network interface, provides network connectivity for containers
+# - csi : container storage interface, provides storage for containers
+# - csi driver : provides storage for containers
+# - csi plugin : provides storage for containers
+# - csi provisioner : provides storage for containers
+# - csi attacher : provides storage for containers
+# - csi resizer : provides storage for containers
+# - csi snapshotter : provides storage for containers
 # - container runtime: responsible for running containers on the node
 # - network policies: define how pods can communicate with each other and with external services
 # - persistent storage: provides persistent storage for data that needs to be retained across pod restarts
+# - node: a machine that runs a kubernetes cluster (instance)
 # - ingress: provides a way to expose services to the outside world
 # - service: provides a way to access services from within the cluster
-# - pod: the basic execution unit in kubernetes, a pod is a logical host for on
+# - pod: the basic execution unit in kubernetes, a pod is a logical host for on(smallest unit of deployment) basically its docker containers
 # - deployment: a way to manage the rollout of new versions of an application
 # - replica set: ensures that a specified number of replicas of a pod are running at any giv
 # - daemon set: ensures that a specified number of replicas of a pod are running at any giv
@@ -37,5 +47,242 @@ K8S
 # - storage class: a way to provision storage resources from a pod
 # - cluster autoscaler: a way to automatically scale the cluster based on resource utilization
 # - kubernetes dashboard: a web-based interface for managing the cluster
+# - replication controller: a way to manage the rollout of new versions of an application
+# - pod template: a way to define the configuration of a pod
+# - pod affinity: a way to define the affinity of a pod to a node or other pods
+# - cloud control manager: a way to manage the cluster's resources on a cloud provider
+# - cloud provider: a way to manage the cluster's resources on a cloud provider
+# - kubernetes cluster: a group of machines (nodes) that run containerized applications
+# - kubernetes node: a machine that runs a kubernetes cluster (instance)
+# - kubernetes pod: the basic execution unit in kubernetes, a pod is a logical host
+# - kubernetes service: provides a way to access services from within the cluster
 
+
+## K8S
+
+Q.What is kubernetes?
+
+- an open-source container orchestration system for automating the deployment, scaling, and management of container
+- it was originally designed by google, and is now maintained by the cloud native computing foundation
+- it allows for the deployment of applications and services in a scalable and highly available manner
+- it provides a lot of features such as self-healing, load balancing, and resource management
+- it is widely used in cloud computing and enterprise environments
+- it is also used in edge computing and IoT environments
+- it is a complex system that requires a lot of knowledge and expertise to use
+- it is a multi-cloud platform that can run on multiple cloud providers such as AWS, GCP
+- it is a hybrid cloud platform that can run on-premises and in the cloud
+
+Q. Why do we need kubernetes and why it is used ?
+
+
+
+
+
+Q.Architecture of kubernetes?
+
+- it consists of a control plane and a data plane
+- the control plane is responsible for managing the cluster and making decisions
+- the data plane is responsible for running the applications and services
+- the control plane consists of the following components:
+- api server: responsible for exposing the kubernetes api
+- controller manager: responsible for managing the state of the cluster
+- scheduler: responsible for scheduling pods onto nodes
+- etcd: responsible for storing the state of the cluster
+- the data plane consists of the following components:
+
+Q. What are nodes in k8s ?
+- a node is a machine or a virtual machine that runs a pod[ec2 instances, VMs ,Containers]
+- a node can be a physical machine or a virtual machine
+
+Q. What is control plane?
+- the control plane is the component of the kubernetes cluster that is responsible for managing the cluster and
+making decisions
+- it consists of the following components:
+- api server
+- controller manager
+- scheduler
+- etcd
+- it is responsible for managing the state of the cluster and making decisions
+- it is the brain of the kubernetes cluster
+- it is responsible for scheduling pods onto nodes
+- it is responsible for managing the lifecycle of pods
+- it is responsible for managing the resources of the cluster
+- it is responsible for managing the security of the cluster
+- it is responsible for managing the networking of the cluster
+- it is responsible for managing the storage of the cluster
+- it is responsible for managing the monitoring of the cluster
+- it is responsible for managing the logging of the cluster
+- it is responsible for managing the alerting of the cluster
+- it is responsible for managing the backup and restore of the cluster
+- it is responsible for managing the upgrade and patching of the cluster
+- it is responsible for managing the compliance of the cluster
+- it is responsible for managing the governance of the cluster
+
+
+Q.What are the pods?
+- a pod is the basic execution unit in kubernetes
+- a pod is a logical host for one or more containers
+- a pod is a group of one or more containers that are run on a node and share resources
+
+Q.Difference between kubelet and kubeproxy?
+
+=========================================================================================================================================================================
+| Aspect	        |                         Kubelet                                          |       Kube-proxy                                                         |
+|-----------------|--------------------------------------------------------------------------|---------------------------------------------------------------------------
+| Purpose	        | Manages containers and pods on a node.            	                     | Manages network rules and traffic routing for services.                  |
+| Scope           | Node-level: Focuses on running containers and pods on a single node.	   | Network-level: Focuses on enabling communication between pods/services.  |
+| Interaction	    | Works with the container runtime (e.g., Docker, containerd).	           | Works with network rules (e.g., IP tables, IPVS).                        |
+| Responsibility	| Ensures containers are running as per PodSpecs.	                         | Ensures traffic is routed correctly to pods based on Service definitions.|
+| Dependency	    | Directly interacts with the Kubernetes API server and container runtime. | Relies on the Kubernetes API server for Service and Endpoint updates.    |
+=========================================================================================================================================================================
+
+
+
+
+Kubernetes is an open-source platform designed to automate deploying, scaling, and managing containerized applications. It uses a **master-slave** (client-server) architecture, with a central control plane (Master Node) and worker nodes that run the containers. Here's an overview of its architecture:
+
+### 1. **Master Node (Control Plane)**
+   The master node is responsible for managing the Kubernetes cluster, making global decisions about the cluster (e.g., scheduling, maintaining the desired state of the cluster). It consists of the following key components:
+   
+   - **API Server (kube-apiserver)**:
+     The API server is the central point for all communication within the cluster. It exposes the Kubernetes API, and all components interact with it to make requests. It validates and processes REST requests, allowing clients (like `kubectl`) or other components to query or modify cluster state.
+
+   - **Controller Manager (kube-controller-manager)**:
+     The controller manager runs controllers that regulate the state of the cluster. For example, it manages replication (ensuring that the correct number of pod replicas are running), deployments, and other controllers like node, namespace, and service controllers.
+
+   - **Scheduler (kube-scheduler)**:
+     The scheduler watches for newly created pods that have no assigned nodes and schedules them to run on the available worker nodes based on resource requirements, policies, and constraints.
+
+   - **etcd**:
+     `etcd` is a consistent, distributed key-value store that holds the cluster's configuration data, such as cluster state, API objects, and metadata. All other components access the `etcd` database for their configurations.
+
+   - **Cloud Controller Manager**:
+     It integrates with various cloud providers (like AWS, GCP, Azure) to manage cloud-specific resources such as load balancers, networking, and storage.
+
+### 2. **Worker Nodes (Node)**
+   The worker nodes are responsible for running the containers (in the form of Pods). Each worker node has the following components:
+
+   - **Kubelet**:
+     The kubelet is an agent running on each node, responsible for ensuring that containers are running in a Pod. It communicates with the API server and constantly reports the node status back to the control plane.
+
+   - **Kube Proxy**:
+     Kube proxy is responsible for maintaining network rules on each node. It enables network communication between pods, both within the cluster and to/from external services. Kube proxy ensures that traffic is routed to the correct pod when the service is accessed.
+
+   - **Container Runtime**:
+     The container runtime is the software responsible for running containers (e.g., Docker, containerd, or CRI-O). It pulls container images and runs the container instances inside the pod.
+
+   - **Pods**:
+     A Pod is the smallest deployable unit in Kubernetes and can contain one or more containers that share the same network namespace and storage volumes. The containers in a Pod communicate with each other via localhost and share resources like CPU, memory, and storage.
+
+### 3. **Key Concepts of Kubernetes**
+
+   - **Namespace**:
+     Namespaces provide a way to divide cluster resources between multiple users or applications. It helps isolate resources in a multi-tenant environment.
+
+   - **Services**:
+     A service is an abstraction layer that defines a logical set of Pods and provides a stable endpoint (IP and DNS) for accessing them, regardless of the specific pod or node they are running on.
+
+   - **ReplicaSets**:
+     A ReplicaSet ensures that a specified number of replicas of a pod are running at any given time. It helps maintain the desired state of Pods.
+
+   - **Deployments**:
+     A deployment provides declarative updates to Pods and ReplicaSets, helping manage the rollout and rollback of application versions.
+
+   - **ConfigMaps and Secrets**:
+     ConfigMaps are used to store non-sensitive configuration data, and Secrets are used to store sensitive data like passwords and API keys.
+
+### 4. **Communication in Kubernetes**
+   - **Pod-to-Pod Communication**: Pods can communicate directly with each other across nodes via the pod IP address, thanks to the networking model provided by Kubernetes.
+   - **Service Discovery**: Kubernetes provides DNS-based service discovery, meaning that services can be accessed by their service name instead of needing to know the pod's IP address.
+
+### 5. **Kubernetes Components Summary**
+   - **Master Node Components**:
+     - API Server
+     - Scheduler
+     - Controller Manager
+     - etcd (storage)
+     - Cloud Controller Manager (optional)
+   - **Worker Node Components**:
+     - Kubelet
+     - Kube Proxy
+     - Container Runtime
+     - Pods
+
+This architecture allows Kubernetes to scale applications and services dynamically, ensuring high availability and reliability across a containerized infrastructure.
+
+
+
+
+##07-01-2025
+
+##kubernetes cluster create
+
+##kubectl 
+##eksctl
+##aws
+
+##things to learn
+
+pod 
+replicaset 
+deployment 
+services 
+ load balancers 
+ node port 
+ cluster ip
+ config 
+ secrets 
+ cmp 
+namespace
+resource replca 
+request quata 
+ingres 
+volumes 
+HPD 
+
+
+## how to create a kubernetes cluster 
+
+## install kubectl
+   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+
+##pod.yaml
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+      - containerPort: 80
+
+
+
+kubectl get nodes    --- to get information about created clusters 
+
+kubectl get pods     --- to get information about created pods
+
+client version can be only -1 oe -2 by kubernetes version
+
+
+
+
+
+
+
+
+##task 
+set permanent alias in linux 
+
+
+perform/implement lamp server
 
