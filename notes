@@ -6,7 +6,7 @@
 - it is a hybrid cloud platform that can run on-premises and in the cloud
 - kubernetes have self managing and self healing ability once deployed correctly.
 - we can also use upto 100% of our resources in kubernetes.
-- 
+- By default kubernetes port starts from 30000 to 32767.
 
 ## Kubernetes Architrcture
  # components:-
@@ -177,7 +177,8 @@ command to list replicaset --> kubectl get rs
  As a user we create a deployment set that creates the replicasets and manages it.
  It can be used to manage multiple ReplicaSets at the same time.
  If we want to update a the pod we can do that easily without any downtime using deployment. As it will update one pod and direct its
- traffic to other pods or can create new pod. It will do this for each pod to avoid downtime.
+ traffic to other pods or can create new pod. It will do this for each pod to avoid downtime. this increase in pods to update change is called 
+ rollout update.
 
  We can make changes to our go back to previous changes in deployment.
  command --> kubectl rollout undo deployment/(deployment_name)
@@ -213,9 +214,70 @@ kubctl api-resources --> to check all the api resources available in the cluster
 
 
 ## SERVICES
-  LB -> Loadbalancer
-  NP -> Network Policy
-  CIP -> ClusterIP
+ 
+ LB -> Loadbalancer -> this service is available only on cloud and not on onprem.
+  by default it supports classic loadbalancer. #Q. can we use other type of LB?
+
+ NP -> Network Policy -> this is used to define the service on the port of the node.
+  it works when our node have a public ip to it.
+
+ CIP -> ClusterIP - default cervice of a cluster
+
+# demo service manifest file:-
+filename --> service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp # the selector should match the label in the deployment to attach srvice to it otherwise it will not be attached.
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376  
+
+we can use different manifest in a single yaml file by using --- separator.
+eg:-
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/name: proxy
+spec:
+  containers:
+  - name: nginx
+    image: nginx:stable
+    ports:
+      - containerPort: 80
+        name: http-web-svc # 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app.kubernetes.io/name: proxy
+  ports:
+  - name: name-of-service-port
+    protocol: TCP
+    port: 80
+    targetPort: http-web-svc
+
+#commands
+kubectl get service -> to get service
+kubectl get service -A -> to get all services in namespaces
+kubectl get service -o wide -> to get additional information about service
 
 # imperative / declarative --> way of creating service
 # commands  / manifest  
+
+#Q. Difference between Replicaset and Deployment? interview que
+#Q. How can do we upgrade pods in kubernetes if the user is live?
+#Q. Difference between services i.e. LB,NP and CIP
+
+# task
+learn about next 2 services
