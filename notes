@@ -123,7 +123,7 @@ Q.Difference between kubelet and kubeproxy?
  SERVICES
   LB
   NP
-  CLP
+  CIP
  Confg
   services
   CMP
