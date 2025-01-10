@@ -114,6 +114,7 @@ Q.Difference between kubelet and kubeproxy?
   kubectl describe pod/po nginx --> to describe pods nginx 
   kubectl get rs --> to see all replica sets
   kubectl get deployments --> to see all deployments
+  
 
 # Manifest
  Pod 
@@ -194,11 +195,19 @@ Deploy -> ReplicaSet -> pods [deployment k andar aati hai replica set & replicas
 ## Services:-
 
 type:
-  LB -> LoadBalancer
+  LB -> LoadBalancer --> only availabe in cloud
   NP -> NodePort
-  CIP -> ClusterIP
+  CIP -> ClusterIP -> cluster's default service
+
+  kubectl get service --> to see all services
+  kubectl get service --> to get all services in namespace
+
 
 #imperative / declarative
 #commands   / manifest
 
 >>>task --> complete Pod ,RS ,Deploy
+Q.Difference between replicaset and deployment?
+A. Deployment is used to maintain the number of replicas of a pod. ReplicaSet is used to
+maintain the number of replicas of a pod.
+
