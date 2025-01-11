@@ -199,15 +199,71 @@ type:
   NP -> NodePort
   CIP -> ClusterIP -> cluster's default service
 
-  kubectl get service --> to see all services
-  kubectl get service --> to get all services in namespace
-
-
 #imperative / declarative
 #commands   / manifest
 
 >>>task --> complete Pod ,RS ,Deploy
-Q.Difference between replicaset and deployment?
-A. Deployment is used to maintain the number of replicas of a pod. ReplicaSet is used to
-maintain the number of replicas of a pod.
+# Q.Difference between replicaset and deployment?
+# A. Deployment is used to maintain the number of replicas of a pod. ReplicaSet is used to
+# maintain the number of replicas of a pod.
 
+>>> demo service manifest file:-
+
+filename --> service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp # the selector should match the label in the deployment to attach srvice to it otherwise it will not be attached.
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376  
+
+we can use different manifest in a single yaml file by using --- separator.
+eg:-
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/name: proxy
+spec:
+  containers:
+  - name: nginx
+    image: nginx:stable
+    ports:
+      - containerPort: 80
+        name: http-web-svc # 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app.kubernetes.io/name: proxy
+  ports:
+  - name: name-of-service-port
+    protocol: TCP
+    port: 80
+    targetPort: http-web-svc
+
+>>>commands
+
+kubectl get service -> to get service
+kubectl get service -A -> to get all services in namespaces
+kubectl get service -o wide -> to get additional information about service
+
+# imperative / declarative --> way of creating service
+# commands  / manifest  
+
+#Q. Difference between Replicaset and Deployment? interview que
+#Q. How can do we upgrade pods in kubernetes if the user is live?
+#Q. Difference between services i.e. LB,NP and CIP
+
+>>> task
+learn about next 2 services
