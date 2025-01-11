@@ -123,7 +123,7 @@ Q.Difference between kubelet and kubeproxy?
  SERVICES
   LB
   NP
-  CLP
+  CIP
  Confg
   services
   CMP
@@ -180,8 +180,8 @@ spec:
         tier: frontend
     spec:
       containers:
-      - name: php-redis
-        image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5
+      - name: nginx
+        image: nginx
         ports:
         - containerPort: 80
 
