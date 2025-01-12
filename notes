@@ -350,5 +350,11 @@ spec:
 
 
 
+## to list pods in detailed manner with pod ip and labels
 
+kubectl get pods -o wide --show-labels
+
+## to list replicasets 
+
+kubectl get replicasets -o wide --show-labels
 
