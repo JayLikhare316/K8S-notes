@@ -304,3 +304,23 @@ kubectl exec -it (podname) -- bash
 kubectl exec -it (podname) -c (container-name) -- (command)
 
 ex... kubectl exec -it pod3 -c firstcontainer -- ls -ltr /etc --> It will list file in etc directory 
+
+
+##what is ReplicaSet
+
+
+
+##Replica set Has 3 Components
+1. Selector : pod ko select karna 
+2. Replicas  : kitne pods chalne chahiye 
+3. Template : kaise ek naya pod create karna hain 
+
+##ReplicaSet Lifecycle
+1. create : run manifest file
+2. Scale : replica KITNA scale karna hain
+3. Managed : replica set pod ko monitor arta hain agr koi pod bnd hua to hain dusra pod create karta hain
+
+use case :
+1. high availability
+2. load balancing in robin round manner
+
