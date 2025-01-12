@@ -358,3 +358,38 @@ kubectl get pods -o wide --show-labels
 
 kubectl get replicasets -o wide --show-labels
 
+
+
+##What is Node Selector ?
+
+iska use ye hain ki node pe jake run hona hain manually
+
+##components
+1. nodeSelector
+2. nodetype
+
+##node selector manifest demo
+
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: pod1
+  labels: 
+    app: nginx
+spec:
+  containers: 
+  - name: myfirstcontainer
+    image: nginx:1.23
+  nodeSelector:              ##----> ye node select krta hain 
+    nodetype: "prodcution"       ##----> ye node type hain jo hum select kr rhe hain
+
+
+##to give labels to node
+kubectl label nodes <node-name> <label-name>=<label-value> 
+
+kubectl label nodes node1 nodetype=production
+
+
+
+## what is Deployment ?
+
