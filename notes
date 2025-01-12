@@ -282,8 +282,8 @@ perform/implement lamp server
 ##Deployment and replica
 
 ##Replica Set (RS)
-Replica Set is a resource in Kubernetes that ensures a specified number of replicas (i.e., copies
-of a pod) are running at any given time. It is a type of controller that automatically manages
+
+Replica Set is a resource in Kubernetes that ensures a specified number of replicas (i.e., copies of a pod) are running at any given time. It is a type of controller that automatically manages
 the number of replicas of a pod to maintain the desired state.
 Replica Set is used to ensure that a specified number of replicas of a pod are running at any
 given time.
@@ -323,4 +323,32 @@ ex... kubectl exec -it pod3 -c firstcontainer -- ls -ltr /etc --> It will list f
 use case :
 1. high availability
 2. load balancing in robin round manner
+
+##REPLICA set manifest demo
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: nginx-replicas
+  labels: 
+    app: nginx-repl
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-repl        ##----> ye check karenga pod ke labeles ko aur use me replicaset chalayenga
+  template:
+    metadata: 
+      labeles:
+        app: nginx-repl
+    spec:
+      containers:
+      - name: nginx       ##(container 1 name given)
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+
+
+
 
