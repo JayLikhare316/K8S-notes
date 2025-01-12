@@ -400,4 +400,55 @@ kubectl label nodes node1 nodetype=production
   replicas decide karta hain kitne copies hone chahiye
   update strategy deployment allow krta hain ki kaise hum updates apply krenge 
 
-  
+deployment jab run karte hain tb bydefault hamesha 4 chize create krta hain pod , service ,deployment, replicaset
+
+##benefits of deployment /advantaeges 
+
+1. zero Down time.
+2. Rollback
+3. Scalability
+
+##TO create deployment
+
+kubectl create deployment (name-of-deployment-to-give) --replicas=(no.of replicas)  --image=(image-name):(version)
+
+kubectl create deployment mynginx --replicas=3  --image=nginx:latest 
+
+
+##TO get deployment details
+kubectl get deployment -o wide --show-labels
+
+## to describe specific deployment 
+
+kubectl describe deployment <deployment-name>
+
+
+###Deployment Using YAML file
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx 
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+
+
+
+## What is Rolling Out Feature ?
+
