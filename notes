@@ -296,5 +296,5 @@ node<Deployment<Replicaset<pods
 #imperative /declrative 
 #commands / manifest
 
-
+##to get inside the pod 
 kubectl exec -it (podname) -- bash
