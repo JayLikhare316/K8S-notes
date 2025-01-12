@@ -298,3 +298,9 @@ node<Deployment<Replicaset<pods
 
 ##to get inside the pod 
 kubectl exec -it (podname) -- bash
+
+
+## to excute commands inside a container in a pod
+kubectl exec -it (podname) -c (container-name) -- (command)
+
+ex... kubectl exec -it pod3 -c firstcontainer -- ls -ltr /etc --> It will list file in etc directory 
