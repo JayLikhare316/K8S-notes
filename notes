@@ -391,5 +391,13 @@ kubectl label nodes node1 nodetype=production
 
 
 
-## what is Deployment ?
 
+
+## what is Deployment ?
+  
+
+  deployment decide karta hain ki kis pod ko run karna hain aur kaise 
+  replicas decide karta hain kitne copies hone chahiye
+  update strategy deployment allow krta hain ki kaise hum updates apply krenge 
+
+  
