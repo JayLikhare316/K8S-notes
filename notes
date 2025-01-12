@@ -295,3 +295,6 @@ node<Deployment<Replicaset<pods
 
 #imperative /declrative 
 #commands / manifest
+
+
+kubectl exec -it (podname) -- bash
