@@ -218,10 +218,10 @@ kubctl api-resources --> to check all the api resources available in the cluster
  LB -> Loadbalancer -> this service is available only on cloud and not on onprem.
   by default it supports classic loadbalancer. #Q. can we use other type of LB?
 
- NP -> Network Policy -> this is used to define the service on the port of the node.
+ NP -> Network Port -> this is used to define the service on the port of the node.
   it works when our node have a public ip to it.
 
- CIP -> ClusterIP - default cervice of a cluster
+ CIP -> ClusterIP - default service of a cluster. 
 
 # demo service manifest file:-
 filename --> service.yaml
@@ -279,5 +279,20 @@ kubectl get service -o wide -> to get additional information about service
 #Q. How can do we upgrade pods in kubernetes if the user is live?
 #Q. Difference between services i.e. LB,NP and CIP
 
-# task
-learn about next 2 services
+## Config Map
+ non-confidential information are sent by configmap.
+ imperative way: kubectl create configmap/cm --from-file=(file name)
+  eg:- kubectl create configmap cm --from-file=index.html
+  declarative way:
+  first create a yaml file by dry running a configmap file
+  kubectl create configmap/cm nginx-cm --from-file=index.html --dry-run=client -o yaml > cm.yaml
+  then make changes in the created yaml file.
+  (reffer to sir repo)
+ 
+ ## secret
+ confidential information are sent by secret
+ it encodes the data in base64.
+ kubectl secret --help --> to get all the options.
+ to decode --> echo <base64 encoded string> | base64 --decode
+ 
+
