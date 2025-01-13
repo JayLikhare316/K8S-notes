@@ -532,7 +532,6 @@ kubectl rollout undo --to-revision=1 deployment apache-deployment
 kubectl rollout status deployment apache-deployment
 
 
-
 ## What is Recreate strategy ?
  ye pods ko replace karne ka tarika 
 
@@ -540,3 +539,42 @@ kubectl rollout status deployment apache-deployment
 ## Components 
 1. pod template
 2. rolling update
+
+
+
+### SECRET and CONFIGMAP
+
+##configmap
+
+non confindential files sent
+
+##CONFIGMAP YAML DEMO
+
+kubectl create cm name=nginx-cm --from-file=index.html                     ##cm-configmap
+
+kubectl create cm name=nginx-cm --from-file=index.html --dry-run=client -o yaml > configmap.yaml
+
+apiVersion:
+kind: ConfigMap
+metadata:
+  
+
+##secret
+
+sensative confidential data sent
+
+##SECRET YAML DEMO
+
+kubectl create secret generic itsmysecret --from-literal=idli=chutney --dry-run=client -o yaml > secret.yaml
+
+
+kubectl port-forward svc/nginx-service 80:80 
+
+
+kubectl port-forward pod/mypod :80 
+
+
+echo "wejhkghj" | base64 --decode
+
+
+kubectl expose pod nginx-secret --port=80  -o yaml --dry-run=client > expose.yaml
