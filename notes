@@ -761,10 +761,20 @@ spec:
 
 
 ##this is used in realtime companies 
- a "SIT" namespace would typically represent a "System Integration Testing" environment, where 
- different components of an application are integrated and tested together, while a "UAT" namespace 
- would represent a "User Acceptance Testing" environment
-dev and prod also namespace 
+dev for development
+sit for system integration testing
+uat for user acceptance testing
+prod for production
+
+Example Workflow in Kubernetes:
+
+• Dev Namespace: Developers push changes to this namespace for initial testing.
+• SIT Namespace: After initial testing, changes are moved to this namespace for integration testing, 
+where different components are validated together.
+• UAT Namespace: Once integration testing is successful, the application moves to the UAT namespace, 
+where users validate whether the application meets their requirements.
+• Prod Namespace: After UAT approval, the application is deployed to the production namespace for actual 
+use by end-users.
 
  kubectl get ns    ## to list namespace 
 
@@ -802,20 +812,3 @@ kubectl create -f (uper-YAML-file-name) --namespace sit
 kubectl get svc -n sit
 
 
-dev for development
-
-sit for system integration testing
-
-uat for user acceptance testing
-
-prod for production
-
-Example Workflow in Kubernetes:
-
-• Dev Namespace: Developers push changes to this namespace for initial testing.
-
-• SIT Namespace: After initial testing, changes are moved to this namespace for integration testing, where different components are validated together.
-
-• UAT Namespace: Once integration testing is successful, the application moves to the UAT namespace, where users validate whether the application meets their requirements.
-
-• Prod Namespace: After UAT approval, the application is deployed to the production namespace for actual use by end-users.
