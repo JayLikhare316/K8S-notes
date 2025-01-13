@@ -578,3 +578,22 @@ echo "wejhkghj" | base64 --decode
 
 
 kubectl expose pod nginx-secret --port=80  -o yaml --dry-run=client > expose.yaml
+
+##What is DaemonSet ?
+
+# A DaemonSet in Kubernetes is a feature that ensures a pod runs on all or some nodes in a cluster: 
+# How it works
+# When a new node joins the cluster, a DaemonSet automatically adds a pod to it. When a node is removed, the pod is removed. 
+# What it's used for
+# DaemonSets are used to deploy background services, such as: 
+# Monitoring systems 
+# Log collection agents 
+# Storage volumes 
+# Networking helpers, like load balancers, network proxies, or VPN clients 
+
+# DaemonSets are also used to deploy services that need to run on every node in the cluster,
+# such as:
+# Node-level monitoring tools
+# Node-level logging tools
+# Node-level backup tools
+
