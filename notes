@@ -626,3 +626,178 @@ kubectl expose pod nginx-secret --port=80  -o yaml --dry-run=client > expose.yam
 # Node-level logging tools
 # Node-level backup tools
 
+## What is resource request and resource limit ?
+
+##Resource Request
+# The resource request is the amount of resources that a container needs to run. It is used to
+# ensure that the container has enough resources to run without being throttled or terminated.
+# The resource request is specified in the container's resource request section of the pod's
+# configuration file.
+# For example, if a container needs 1 CPU core and 512 MB of memory, th
+# resource request would be specified as follows:
+# resources:
+#   requests:
+#     cpu: 1
+#     memory: 512Mi
+
+
+resource request ek tara se configuration hain jo hum pods ke liye define krte hain jisse kubernetes ko pta chalta hain ki kitne resources chahiye
+ye resources CPU memomry ke form me define kiye jaate hain 
+
+##What is Resource Limit ?
+A "resource limit" refers to the maximum amount of a specific resource (like CPU, memory, or storage) that a system, application, or user is allowed to consume, essentially acting as a cap to prevent over-usage and ensure fair distribution of resources across multiple users or processes on a system
+
+resurce limit configuration hain jo pods ki maximum resource limit define krta hain 
+
+
+# Resource Limit
+# The resource limit is the maximum amount of resources that a container can use. It is used to
+# prevent a container from consuming too many resources and causing the node to run out of resources.
+# The resource limit is specified in the container's resource limit section of the pod's
+# configuration file.
+# For example, if a container is limited to 2 CPU cores and 1 GB of memory
+# the resource limit would be specified as follows:
+# resources:
+#   limits:
+#     cpu: 2
+#     memory: 1Gi
+
+
+apiVersion: v1
+kind: Pod 
+metadata: 
+  name: pod1 
+  labels: 
+    env: prod 
+spec: 
+  containers: 
+  - name: myfirstcontainer
+    image: nginx:latest 
+    resources: 
+      requests: 
+        memory: "1Gi"
+        CPU: "800m"
+
+
+## Services in Kubernetes
+
+## 1. What is ClusterIp ?
+
+kubectl expose pod (podname) --port=8080 --target-port=80 --name (newservicename)    ###creating new service with name and port number
+
+kubectl get svc          ## to check running services
+
+kubectl get svc -o wide  ## to check running services with more details
+
+## With YAMl FILE 
+
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: nginx-deployment 
+  labels: 
+    app: nginx
+spec: 
+  replicas: 3
+  selector:
+    matchLabels: 
+      app: nginx 
+  template: 
+    metadta: 
+      labels: 
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+
+---
+
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: nginx-service 
+spec: 
+  selector: 
+    app: nginx 
+  ports:
+  - protocol: TCP 
+    port: 8080 
+    targetport: 80
+
+## 2. NodePort 
+
+kubectl expose pod (podname) --port=8080 --target-port=80 --type NodePort --name=NP-service #(new-servicename)
+
+kubectl get endpoints 
+
+##YAML File
+
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: nginx-service 
+spec: 
+  type: NodePort
+  selector: 
+    app: nginx 
+  ports:
+  - port: 8080 
+    targetport: 80
+    nodePort: 31254      ##Default range 30000-32767
+
+
+
+## 3. Load Balancer 
+
+
+## what is Namespace ?
+
+ logical partition hain kubernetes mein jo cluster resources ko isolate aur organize krta hain ye multiple teams ya projects virtual cluster provide karte hain.
+ resources ko alag alag devide kr skte hain 
+
+
+##this is used in realtime companies 
+ a "SIT" namespace would typically represent a "System Integration Testing" environment, where 
+ different components of an application are integrated and tested together, while a "UAT" namespace 
+ would represent a "User Acceptance Testing" environment
+dev and prod also namespace 
+
+ kubectl get ns    ## to list namespace 
+
+ kubectl create ns (name-of-namespace)
+
+apiVersion: v1 
+kind: pod 
+metadata: 
+  name: pod1 
+  namespace: sit
+  labels: 
+    env: sit
+spec: 
+  containers: 
+  - name: mycontainer 
+    image: nginx:latest 
+
+
+kubectl get pods -n sit   ##-n= namespace else --namespace
+
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: nginx-service 
+spec: 
+  selector: 
+    app: sit       #(given-env-variable)
+  ports:
+  - protocol: TCP
+    port: 8080 
+    targetport: 80
+
+kubectl create -f (uper-YAML-file-name) --namespace sit
+
+kubectl get svc -n sit 
+
