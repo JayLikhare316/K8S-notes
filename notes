@@ -267,3 +267,19 @@ kubectl get service -o wide -> to get additional information about service
 
 >>> task
 learn about next 2 services
+
+## Config Map
+ non-confidential information are sent by configmap.
+ imperative way: kubectl create configmap/cm --from-file=(file name)
+  eg:- kubectl create configmap cm --from-file=index.html
+  declarative way:
+  first create a yaml file by dry running a configmap file
+  kubectl create configmap/cm nginx-cm --from-file=index.html --dry-run=client -o yaml > cm.yaml
+  then make changes in the created yaml file.
+  (reffer to sir repo)
+ 
+ ## secret
+ confidential information are sent by secret
+ it encodes the data in base64.
+ kubectl secret --help --> to get all the options.
+ to decode --> echo <base64 encoded string> | base64 --decode
