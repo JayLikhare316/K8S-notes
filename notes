@@ -811,4 +811,10 @@ kubectl create -f (uper-YAML-file-name) --namespace sit
 
 kubectl get svc -n sit
 
+##DNS ENTRY SYNTAX
+
+# servicename.namespace.svc.cluster.local
+ex.. 
+curl nginx-service.sit.svc.cluster.local:8080 
+
 
