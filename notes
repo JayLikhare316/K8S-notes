@@ -801,3 +801,4 @@ kubectl create -f (uper-YAML-file-name) --namespace sit
 
 kubectl get svc -n sit 
 
+
