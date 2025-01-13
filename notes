@@ -134,6 +134,9 @@ sudo mv /tmp/eksctl /usr/local/bin
     - containerPort: 80
 
 client and cluster can work on version that are 1 or 2 version apart not more than that.
+# command
+kubectl exec -it <pod_name> -- /bin/bash --> to go inside pod
+we can add "-n namespace_name" to go inside different namespaces.
 
 temporary alias set --> alias k=kubectl
 create permenant alias --> edit /etc/bashrc and add alias k=kubectl at the bottom
@@ -280,19 +283,107 @@ kubectl get service -o wide -> to get additional information about service
 #Q. Difference between services i.e. LB,NP and CIP
 
 ## Config Map
- non-confidential information are sent by configmap.
- imperative way: kubectl create configmap/cm --from-file=(file name)
-  eg:- kubectl create configmap cm --from-file=index.html
-  declarative way:
-  first create a yaml file by dry running a configmap file
-  kubectl create configmap/cm nginx-cm --from-file=index.html --dry-run=client -o yaml > cm.yaml
-  then make changes in the created yaml file.
-  (reffer to sir repo)
+- non-confidential information are sent and stored by configmap.
+- 
+ # commands
+ This command will create a configmap directly from the data we gave it in the command itself.
+ kubectl create configmap/cm (configmap_name) --from-literal=KEY=VALUE .. 
+ eg:- kubectl create configmap/cm exampleconfigmap --from-literal=1_database_name=data1 --from-literal=2_database_name=data2
+
+ If we have one or more files that contains data and we want to create a configmap from those files,
+ we can do that with the following command.
+ imperative way: kubectl create configmap/cm (configmap_name) --from-file=KEY=VALUE ..
+ eg:- kubectl create configmap/cm exampleconfigmap --from-file=data1.txt --from-file=data2.txt
+
+ If we have a directory that contains the files that contains imp data and we want to make a configmap from those files.
+ kubectl create configmap/cm (configmap_name) --from-file=directory_name/ 
+ eg:- kubectl create configmap/cm exampleconfigmap --from-file=demo_dir/
+
+#demo configmap yaml file:-
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: exampleconfigmap
+data:
+ 1_database_name: data1
+ 2_database_name: data2
+we can create a config map from a yaml file like this.
+To use a configmap in a pod, we need to "reference" it in the pod spec.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx:1.14.1
+    envform:
+    - configMapRef:
+     name: exampleconfigmap
+To use a configmap in a pod as a "Volume", we need to provide the path where the pod to be attached and provide the configmap.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx:1.14.1
+    volumeMounts:
+    - name: examplevolumemount
+      mountPath: "/config"
+      readOnly: "true"
+  Volumes:
+   - name: examplevolumemount
+     configMap:
+      name: exampleconfigmap
+
+ declarative way:
+ first create a yaml file by dry running a configmap file
+ kubectl create configmap/cm nginx-cm --from-file=index.html --dry-run=client -o yaml > cm.yaml
+
+ then make changes in the created yaml file.
+ (reffer to sir repo)
  
  ## secret
- confidential information are sent by secret
- it encodes the data in base64.
- kubectl secret --help --> to get all the options.
- to decode --> echo <base64 encoded string> | base64 --decode
+- confidential information are sent and stored by secret.
+- it encodes the data in base64.
+- it is used to store sensitive information such as database credentials, api keys, etc.
  
+ #commands
+ kubectl secret --help --> to get all the options.
 
+ kubectl create secret generic (secret_name) --from-literal=KEY=VALUE ..
+ eg:- kubectl create secret generic mysecret --from-literal=name=prathamesh
+ This command will create a secret named mysecret with a key named name and value prathamesh and it will encrypt the value in base64.
+ 
+ kubectl get secret --> to get all the secrets.
+ kubectl get secret <secret_name> --> to get a specific secret.
+ kubectl get secret <secret_name> -o yaml--> to get the content of a specific secret. But it will be encrypted in base64.
+ echo <base64 encoded string> | base64 --decode/-d --> to decode the base64 encoded string.
+
+# demo secret yaml file:-
+apiVersion: v1
+kind: Secret
+metadata:
+ name: exampleSecret
+data:
+ 1_password: "hello"
+ 2_password: "world"
+ 
+To use secret as a volume in pod.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx:1.14.1
+    volumeMounts:
+    - name: secretvolumemount
+      mountPath: "/secret"
+  Volumes:
+   - name: secretvolumemount
+     secret:
+      secretName: exampleSecret
