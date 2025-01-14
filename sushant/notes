@@ -134,11 +134,13 @@ container --> pod --> deployment --> service --> user
 # How to create a namespace 
 
 1. kubectl create ns nginx-ns
-2. kubectl run nginx --image=nginx -n nginx     #---> create a pod through CMD in the namespace
-3. kubectl get pods -n nginx       #---> to see pods in the namespace
-4. kubectl get pods -n nginx -o wide     #---> to see pods in the namespace with more details
+2. kubectl run nginx --image=nginx -n nginx-ns    #---> create a pod through CMD in the namespace
+3. kubectl get pods -n nginx-ns      #---> to see pods in the namespace
+4. kubectl get pods -n nginx-ns -o wide     #---> to see pods in the namespace with more details
 
 
+# how to enter in pod
 
+1. kubectl exec -it pod/nginx-pod -- bash   
 
 
