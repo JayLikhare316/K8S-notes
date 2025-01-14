@@ -4,7 +4,7 @@ Creating Ways of Kubernetes Cluster
 3.KIND Cluster (kubernetes in docker)
 4.EKS/AKS/GKE 
 
-### Creating Cluster WITH KIND 
+###Install and  Creating Cluster WITH KIND 
 1. Create a bash file 
 
 #!/bin/bash
@@ -56,7 +56,7 @@ nodes:
 10. kind create cluster --name=demo-cluster --config=config.yaml   #---> this will create a cluster with 3 nodes
 11. kubectl cluster-info --context demo-cluster      #---> to see the cluster info
 
-## Creating Cluster With Minicube 
+## Install and Creating Cluster With Minicube 
 1. mkdir minicube-cluster
 2. cd minicube-cluster
 3. sudo yum install -y curl wget apt-transport-https
@@ -72,11 +72,11 @@ nodes:
 13. minikube start --driver=docker --vm=true 
 14. kubectl cluster-info --context=minikube
 
-### creating a cluster with kubeadm
+### Install and creating a cluster with kubeadm
+
 #You would need 2 instances/nodes 1.master 2. worker worker nodes can be multiple 
 #EXPOSE port 6443 on security groups of EC2
 
-#Commands
 1. sudo swapoff -a     #---> command on both EC2 
 2.                      #---> command on both EC2
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
@@ -125,6 +125,22 @@ sudo yum-mark hold kubelet kubeadm kubectl
 10. sudo kubeadm reset pre-flight checks    #---> command on worker node
 11. sudo kubeadm join <private-ip-of-control-plane>:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash> --cri-socket 
 "unix:///run/containerd/containerd.sock" --v=5        #---> command on worker node paste the token here 
+
+
+##
+
+container --> pod --> deployment --> service --> user 
+
+# How to create a namespace 
+
+1. kubectl create ns nginx-ns
+2. kubectl run nginx --image=nginx -n nginx     #---> create a pod through CMD in the namespace
+3. kubectl get pods -n nginx       #---> to see pods in the namespace
+4. kubectl get pods -n nginx -o wide     #---> to see pods in the namespace with more details
+
+# How to create a pod using YAML file/ Manifest 
+
+
 
 
 
