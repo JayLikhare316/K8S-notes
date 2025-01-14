@@ -138,8 +138,6 @@ container --> pod --> deployment --> service --> user
 3. kubectl get pods -n nginx       #---> to see pods in the namespace
 4. kubectl get pods -n nginx -o wide     #---> to see pods in the namespace with more details
 
-# How to create a pod using YAML file/ Manifest 
-
 
 
 
