@@ -818,3 +818,9 @@ ex..
 curl nginx-service.sit.svc.cluster.local:8080 
 
 
+
+Creating Ways of Kubernetes Cluster 
+1.kubeadm
+2.Minikube (local/ec2)
+3.KIND Cluster (kubernetes in docker)
+4.EKS/AKS/GKE 
