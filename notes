@@ -389,10 +389,6 @@ kubectl label nodes <node-name> <label-name>=<label-value>
 
 kubectl label nodes node1 nodetype=production
 
-
-
-
-
 ## what is Deployment ?
   
 
@@ -414,14 +410,13 @@ kubectl create deployment (name-of-deployment-to-give) --replicas=(no.of replica
 
 kubectl create deployment mynginx --replicas=3  --image=nginx:latest 
 
-
 ##TO get deployment details
+
 kubectl get deployment -o wide --show-labels
 
 ## to describe specific deployment 
 
 kubectl describe deployment <deployment-name>
-
 
 ###Deployment Using YAML file
 
@@ -446,9 +441,6 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
-
-
-
 
 ## What is Rolling Out Feature ?
 
@@ -487,7 +479,6 @@ spec :
 
 ## Rolling Update Feature Demo VERSION 2 FILE
 
-
 apiVersion: apps/v1
 kind: Deployment
   metadata:
@@ -518,7 +509,6 @@ spec :
         ports:
         - containerPort: 80
 
-
 ##to check rollout history of deployment
 
 kubectl rollout history deployment apache-deployment
@@ -534,7 +524,6 @@ kubectl rollout status deployment apache-deployment
 
 ## What is Recreate strategy ?
  ye pods ko replace karne ka tarika batata self-healing
-
 
 #Recreate Strategy DEMO YAML File 
 
@@ -569,8 +558,6 @@ spec :
 1. pod template
 2. rolling update
 
-
-
 ### SECRET and CONFIGMAP
 
 ##configmap
@@ -581,12 +568,7 @@ non confindential files sent
 
 kubectl create cm name=nginx-cm --from-file=index.html                     ##cm-configmap
 
-kubectl create cm name=nginx-cm --from-file=index.html --dry-run=client -o yaml > configmap.yaml
-
-apiVersion:
-kind: ConfigMap
-metadata:
-  
+kubectl create cm name=nginx-cm --from-file=index.html --dry-run=client -o yaml > configmap.yaml  
 
 ##secret
 
@@ -749,16 +731,12 @@ spec:
     targetport: 80
     nodePort: 31254      ##Default range 30000-32767
 
-
-
 ## 3. Load Balancer 
-
 
 ## what is Namespace ?
 
  logical partition hain kubernetes mein jo cluster resources ko isolate aur organize krta hain ye multiple teams ya projects virtual cluster provide karte hain.
  resources ko alag alag devide kr skte hain 
-
 
 ##this is used in realtime companies 
 dev for development
@@ -817,4 +795,12 @@ kubectl get svc -n sit
 ex.. 
 curl nginx-service.sit.svc.cluster.local:8080 
 
+
+####Volumes
+persistant volume 
+
+#type of 
+
+host
+addons --> CSI drivers EBS Volume 
 
