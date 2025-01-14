@@ -283,3 +283,27 @@ learn about next 2 services
  it encodes the data in base64.
  kubectl secret --help --> to get all the options.
  to decode --> echo <base64 encoded string> | base64 --decode
+
+
+ #namespace _> it provides logical divison
+  #namespace schedules in all the cluster nodes you have.
+
+ kubectl get ns 
+ kubectl get ns dev --> to make our own namespaces
+ kubectl get ns -o wide --> to get additional information about namespace
+
+>>> external volume lagane ke liye
+
+# volume in kubernetes:[persistant volume]
+host 
+addons -> CSI drives ebs volume 
+
+#  pod 
+#   \/
+#  volume
+#   \/
+# persistent volume 
+#   \/
+#  persistent volume claim{EBS} -->Refer EBS volume documentation in AWS addon
+
+
