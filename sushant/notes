@@ -140,7 +140,7 @@ container --> pod --> deployment --> service --> user
 
 # how to enter in pod
 1. kubectl exec -it pod/nginx-pod -n nginx-ns -- bash 
-
+z
 2.kubectl describe pod nginx-pod -n nginx-ns  #---> to see the details of the pod
 
 ## ReplicaSet/ StatefulSet /Deployment
@@ -150,6 +150,18 @@ kubectl scale deployment/nginx-deploy -n nginx-ns --replicas=5 #---> to scale th
 ##syntax 
  kubectl scale deployment/(name-of-deployment) -n (name-of-namespace) --replicas=(number-of-replicas)
 
- 
+kubectl set image deployment/nginx-deployment -n nginx-ns nginx-container=nginx:1.26.3   #---> to update the image of the deployment
+##syntax
+kubectl set image deployment/(deploy-name) -n (namespace-name) (container-name)=image-name:tag  
+kubectl rollout status deployment/nginx-deployment -n nginx-ns  #---> to check the status
+kubectl rollout history deployment/nginx-deployment -n nginx-ns  #---> to check the history
+kubectl rollout undo deployment/nginx-deployment -n nginx-ns  #---> to undo the last deployment
+kubectl rollout undo deployment/nginx-deployment -n nginx-ns --to-revision=1  #---> to undo to a specific revision
+kubectl rollout pause deployment/nginx-deployment -n nginx-ns  #---> to pause the deployment
+kubectl rollout resume deployment/nginx-deployment -n nginx-ns  #---> to resume the deployment
+
+## DaemonSets
+
+
 
 
