@@ -163,6 +163,16 @@ kubectl rollout resume deployment/nginx-deployment -n nginx-ns  #---> to resume 
 ## DaemonSets
 daemonsets unsure krta hain ki har ek node me ek pod run krta rahe
 
+##
+kubectl get job      #---> to see all jobs
+kubectl get job -n nginx-ns  #---> to see all jobs in a specific namespac
+kubectl get job -n nginx-ns -o wide  #---> to see all jobs in a specific namespace with more details
+
+
+kubectl logs pod/(name-of-pod-created) -n nginx-ns #---> to see the logs of the pod
+
+
+
 
 
 

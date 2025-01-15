@@ -1,0 +1,28 @@
+1. Download and Install Windows Package Manager
+2.Run This command on Powershell with administrator 
+   #winget install Kubernetes.kind
+3.Download and Install Docker Desktop 
+4. Create a yaml file with name kind-config.yaml 
+
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+nodes:
+- role: control-plane
+  image: kindest/node:v1.24.1
+- role: worker
+  image: kindest/node:v1.24.1
+- role: worker
+  image: kindest/node:v1.24.1
+
+5. Run Docker Desktop 
+6. Go to the location where you have saved the kind-config.yaml 
+7. Run this command
+ #kind create cluster --config kind-config.yaml
+
+If You have followed this Steps Carefully Then Congratulation you have installed an created a cluster on your Local system
+You can verify the cluster by running the following command
+
+#kind get clusters
+
+#kubectl get nodes 
+
