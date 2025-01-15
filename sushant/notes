@@ -161,6 +161,7 @@ kubectl rollout pause deployment/nginx-deployment -n nginx-ns  #---> to pause th
 kubectl rollout resume deployment/nginx-deployment -n nginx-ns  #---> to resume the deployment
 
 ## DaemonSets
+daemonsets unsure krta hain ki har ek node me ek pod run krta rahe
 
 
 
