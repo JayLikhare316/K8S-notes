@@ -167,12 +167,18 @@ daemonsets unsure krta hain ki har ek node me ek pod run krta rahe
 kubectl get job      #---> to see all jobs
 kubectl get job -n nginx-ns  #---> to see all jobs in a specific namespac
 kubectl get job -n nginx-ns -o wide  #---> to see all jobs in a specific namespace with more details
+##
+kubectl logs pod/(name-of-pod-created) -n nginx-ns #---> to see the logs of the po
+##
+kubectl get cronjobs -n nginx-ns    #---> to see all cronjobs in a specific namespace
+kubectl get cronjobs -n nginx-ns -o wide  #---> to see all cron
 
+## Storage classes
+kubectl get sc      #---> to see all storage classes
+kubectl get sc -n nginx-ns  #---> to see all storage classes in a specific namespace
+kubectl get sc -n nginx-ns -o wide  #---> to see all storage classes in a specific namespace with more details
 
-kubectl logs pod/(name-of-pod-created) -n nginx-ns #---> to see the logs of the pod
-
-
-
-
-
-
+#type of storage classes
+1. local
+2. ceph
+3. csi
