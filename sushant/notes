@@ -138,9 +138,18 @@ container --> pod --> deployment --> service --> user
 3. kubectl get pods -n nginx-ns      #---> to see pods in the namespace
 4. kubectl get pods -n nginx-ns -o wide     #---> to see pods in the namespace with more details
 
-
 # how to enter in pod
+1. kubectl exec -it pod/nginx-pod -n nginx-ns -- bash 
 
-1. kubectl exec -it pod/nginx-pod -- bash   
+2.kubectl describe pod nginx-pod -n nginx-ns  #---> to see the details of the pod
+
+## ReplicaSet/ StatefulSet /Deployment
+
+kubectl scale deployment/nginx-deploy -n nginx-ns --replicas=5 #---> to scale the deployment
+
+##syntax 
+ kubectl scale deployment/(name-of-deployment) -n (name-of-namespace) --replicas=(number-of-replicas)
+
+ 
 
 
