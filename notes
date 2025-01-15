@@ -370,7 +370,7 @@ metadata:
 data:
  1_password: "hello"
  2_password: "world"
- 
+
 To use secret as a volume in pod.
 apiVersion: v1
 kind: Pod
@@ -387,3 +387,86 @@ spec:
    - name: secretvolumemount
      secret:
       secretName: exampleSecret
+
+
+## Persistant Volume (PV)
+- When we store data in a pod, it is not persistent. It will be deleted when the pod is restarted or deleted.
+- Persistant volume ensures that the data is stored even after the pod is restarted or deleted.
+- We use PVC(persistant volume claim) to use the PV in our pod. PV can not be used directly in pod.
+- The PV should match the PVC(persistant volume claim) in terms of storage size and access mode while writing it in a yaml file.
+
+# demo yaml file of Persistant Volume (PV):-
+apiVerssion : v1
+kind: PersistentVolume
+metadata: 
+ name: example-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+
+# demo yaml file of Persistant Volume Claim(PVC):-
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+ 
+ # demo yaml pod file using pvc as volume:- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: example-pvc
+  containers:
+    - name: task-pv-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: task-pv-storage
+
+In above first we create a PV to allocate storage space on the host machine. Then we create a PVC to request storage space from
+the cluster. Then we assigned the PVC as a volume to the pod. The pod can now use the storage space allocated by the PV.
+
+ Types:
+ Host 
+ Addons
+ fsx is for windows
+
+ Volume Add-ons:
+ These are extensions or plugins that enhance how Kubernetes handles storage.
+ Types of Kubernetes Volume Add-ons:-(some of the types)
+  Container Storage Interface (CSI)
+  Persistent Volume Claims (PVC) Enhancers
+ 
+ Container Storage Interface (CSI)
+
+
+## Namespace
+- a logical grouping of resources.
+- Namespace is not specified to a node it is seen across the cluster.
+
+ # command 
+ imperative way: kubectl create namespace/ns (namespace_name)
+
+
+ 
