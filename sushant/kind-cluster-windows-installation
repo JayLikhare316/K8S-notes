@@ -17,7 +17,7 @@ nodes:
 5. Run Docker Desktop 
 6. Go to the location where you have saved the kind-config.yaml 
 7. Run this command
- #kind create cluster --config kind-config.yaml
+ #kind create cluster --config kind-config.yaml --name=multi-node
 
 If You have followed this Steps Carefully Then Congratulation you have installed an created a cluster on your Local system
 You can verify the cluster by running the following command
