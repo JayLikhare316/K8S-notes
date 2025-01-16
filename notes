@@ -307,3 +307,17 @@ addons -> CSI drives ebs volume
 #  persistent volume claim{EBS} -->Refer EBS volume documentation in AWS addon
 
 
+
+# stateful set --> db --> mysql,mongodb
+
+Every stateful set has a PVC[persistance volume] on it. 
+It is spetially used for database.
+It is not deleted instantly.
+
+>>>Q. Stateful set V/S Deployment
+>>>Q. Daemon set V/S Deployment
+
+#Daemon Set -->
+
+todays topic- memory & HPA --> Sushant chutke padh lena ye.
+# Horizontal Pod Autoscaler (HPA)
