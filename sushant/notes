@@ -182,3 +182,8 @@ kubectl get sc -n nginx-ns -o wide  #---> to see all storage classes in a specif
 1. local
 2. ceph
 3. csi
+
+kubectl get pv    #---> to see all persistent volumes
+kubectl get pv -n nginx-ns  #---> to see all persistent volumes in a specific namespace
+kubectl get pv -n nginx-ns -o wide  #---> to see all persistent volumes in a specific namespace with more details 
+
