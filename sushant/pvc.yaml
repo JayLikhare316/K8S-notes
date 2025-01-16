@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata: 
   name: local-pvc
-  namespace: nginx-ns 
+  namespace: nginx-ns
   labels: 
     app: local-pvc 
 spec:

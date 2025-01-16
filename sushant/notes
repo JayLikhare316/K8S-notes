@@ -187,3 +187,20 @@ kubectl get pv    #---> to see all persistent volumes
 kubectl get pv -n nginx-ns  #---> to see all persistent volumes in a specific namespace
 kubectl get pv -n nginx-ns -o wide  #---> to see all persistent volumes in a specific namespace with more details 
 
+kubectl get all    #---> to see all resources in the cluster
+kubectl get all -n nginx-ns  #---> to see all resources in a specific namespace
+
+kubectl get svc    #---> to see all services
+kubectl get svc -n nginx-ns  #---> to see all services in a specific namespace
+kubectl get svc -n nginx-ns -o wide  #---> to see all services in wide 
+
+kubectl port-forward service/nginx-service -n nginx-ns 80:80 --address=0.0.0.0    #---> to forward the port of the service
+#syntax
+kubectl port-forwar service/(service-name) -n (namespac) (local-port):(remote-port) --address=0.0.0.0
+
+# What is ingress?
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource
+
+client -> ingress managed LB -> routing rule -> service -> pods
+                                                        -> pods 
+
