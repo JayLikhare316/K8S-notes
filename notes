@@ -468,5 +468,35 @@ the cluster. Then we assigned the PVC as a volume to the pod. The pod can now us
  # command 
  imperative way: kubectl create namespace/ns (namespace_name)
 
+#Q. Difference between stateful set and deployment?(interview que)
 
- 
+## Stateful Set
+- Every stateful set has a PV(persistant volume) on it.
+- It is espesally used for Databases
+- It is not deleted instantly.
+- 
+
+## Daemon Set
+- It is used for running a pod on every node in the cluster.
+- It is espesialy used for monitoring.
+- it has a higher priority than deployment.
+- eg:- kubelet, 
+
+#Q. Difference between Daemon set and Deployment?
+#Q. Difference between Stateful set, Daemon set and Deployment? (min 5 points)
+
+
+interview topics:
+Architecture
+imp components / basic components
+pod , deploymnet , replicaset , service
+
+
+
+gives pod cpu consumption --> eskctl top pods
+gives nodes cpu consumption --> eksctl top nodes
+to see logs of pod --> kubectl logs pod/pod_name -n kube-system
+to see logs of deployment --> kubectl logs deployment/deplopyment_name -n kube-system
+
+
+## HPA (Horizontal Pod Autoscaler)
