@@ -204,3 +204,6 @@ Ingress exposes HTTP and HTTPS routes from outside the cluster to services withi
 client -> ingress managed LB -> routing rule -> service -> pods
                                                         -> pods 
 
+
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml   #---> to deploy ingress nginx
+kubectl get ingress -n nginx-ns  #---> to see all ingress in a specific namespace
