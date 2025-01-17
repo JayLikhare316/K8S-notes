@@ -28,12 +28,13 @@ Operators, Helm, Service Mesh, Kubernetes API
 Security:
 Pod security Standards (PSS), Image Scanning, Network Policies, Secret Encryption, Network Policies, RBAC
 
+Cloud-Native Kubernetes:
+managed Services(EKS, AKS, GKE), Cluster Autoscaler, Spot/Preemptible Nodes.
 
+Debugging and Troubleshooting:
+kubectl debugging, Logs, Resource Usage analysis
 
-
-
-
-
+#############################################################################
 
 Creating Ways of Kubernetes Cluster 
 1.kubeadm
@@ -41,7 +42,10 @@ Creating Ways of Kubernetes Cluster
 3.KIND Cluster (kubernetes in docker)
 4.EKS/AKS/GKE 
 
-###Install and  Creating Cluster WITH KIND 
+#################################################################################
+ 
+ 
+ ###Install and  Creating Cluster WITH KIND 
 1. Create a bash file 
 
 #!/bin/bash
@@ -77,11 +81,8 @@ apiVersion: kind.x-k8s.io/v1alpha4
 
 nodes:
 - role: control-plane
-  image: kindest/node:v1.31.2
 - role: worker
-  image: kindest/node:v1.31.2
 - role: worker
-  image: kindest/node:v1.31.2
   extraPortMappings:
   - containerPort: 80
     hostPort: 80
@@ -92,6 +93,8 @@ nodes:
 
 10. kind create cluster --name=demo-cluster --config=config.yaml   #---> this will create a cluster with 3 nodes
 11. kubectl cluster-info --context demo-cluster      #---> to see the cluster info
+
+###################################################################################################################
 
 ## Install and Creating Cluster With Minicube 
 1. mkdir minicube-cluster
@@ -108,6 +111,8 @@ nodes:
 12. sudo mv /kubectl /usr/local/bin/
 13. minikube start --driver=docker --vm=true 
 14. kubectl cluster-info --context=minikube
+
+#########################################################################################################
 
 ### Install and creating a cluster with kubeadm
 
@@ -164,7 +169,7 @@ sudo yum-mark hold kubelet kubeadm kubectl
 "unix:///run/containerd/containerd.sock" --v=5        #---> command on worker node paste the token here 
 
 
-##
+###########################################################################################
 
 container --> pod --> deployment --> service --> user 
 
@@ -244,3 +249,19 @@ client -> ingress managed LB -> routing rule -> service -> pods
 
 kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml   #---> to deploy ingress nginx
 kubectl get ingress -n nginx-ns  #---> to see all ingress in a specific namespace
+
+
+##Probe (request)
+
+1.liveness probe
+2.readiness probe
+3.startup probe
+
+
+## Taints/Tolerations
+
+Taints: Mark a node as tainted, so that pods cannot be scheduled on it unless they have the matching tolerance
+
+Tolerations: Allow a pod to be scheduled on a tainted node, if it has the matching tolerance
+
+
