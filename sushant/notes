@@ -261,7 +261,84 @@ kubectl get ingress -n nginx-ns  #---> to see all ingress in a specific namespac
 ## Taints/Tolerations
 
 Taints: Mark a node as tainted, so that pods cannot be scheduled on it unless they have the matching tolerance
+# means it marks as do not use this node
 
 Tolerations: Allow a pod to be scheduled on a tainted node, if it has the matching tolerance
+# means it allows to use this node
 
+kubectl taint node multi-node-worker1 prod=true:NoSchedule
+#Syntax
+kubectl taint node (node-name) (key)=(value): (effect)    #---> to taint a node 
+
+#effect
+1. NoSchedule
+2. NoExecute
+3. PreferNoSchedule
+
+kubectl untaint node multi-node-worker1
+#Syntax
+kubectl untaint node (node-name)        #---> to untaint a node
+
+kubectl get nodes -o wide      #---> to check which nodes are tainted
+
+##Types of auto scalling
+1.HPA (Horizontal pod auto scalling)   #---> to scale the number of replicas of a pod
+2.VPA (Vertical pod auto scalling)   #---> to scale the resources of a pod
+3.KEDA (Kubernetes event-driven autoscaling)    #---> to scale the number of replicas of a pod based on 
+#the number of events
+
+#HPA
+kubectl autoscale deployment my-deployment --min=1 --max=10 --cpu-percent=50
+#Syntax
+kubectl autoscale deployment (deployment-name) --min=(min-replicas) --max=(max-replicas) --cpu-percent=(cpu-percent)    #---> to create a HPA
+kubectl delete hpa my-hpa         #---> to delete a HPA
+kubectl get hpa -o wide         #---> to get all HPA
+kubectl get hpa my-hpa -o yaml    #---> to get the status of a HPA
+
+#VPA
+kubectl create vpa --namespace default --name my-vpa --target-references my-deployment
+#Syntax
+kubectl create vpa --namespace (namespace) --name (vpa-name) --target-references
+#(target-deployment)    #---> to create a VPA
+kubectl delete vpa my-vpa         #---> to delete a VPA
+kubectl get vpa -o wide         #---> to get all VPA
+kubectl get vpa my-vpa -o yaml    #---> to get the status of a VPA
+
+#KEDA
+kubectl create keda --namespace default --name my-keda --target-references my-deployment
+#Syntax
+kubectl create keda --namespace (namespace) --name (keda-name) --target-references (target-deployment)   #---> to create a KEDA
+
+#what is Metrics
+Metrics are the data that is collected from the cluster, such as CPU usage, memory usage, and
+network traffic. This data is used to make decisions about the cluster, such as scaling up or down
+or identifying performance issues.
+
+##install metric-server on a kind-cluster
+1. kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+2.kubectl -n kube-system edit deployment metrics-server
+3. ##add this in container in args
+- --kubelet-insecure-tls
+- --kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP
+
+4. kubectl -n kube-system rollout restart deployment metrics-server
+5.
+kubectl get pods -n kube-system
+kubectl top nodes
+
+
+
+kubectl run -i --tty load-generator --image=busybox -n apache -- /bin/sh    #---> to run a pod in interactive mode
+#syntax
+kubectl run -i --tty (pod-name) --image (image-name) -n (namespace) -- (command/shelltype)        #--> to run a pod in interactive mode
+
+while true; do wget -q -O- http://load-generator.default.svc.cluster.local; done      #----> to run on loop / stress app
+#syntax
+while true; do (command) ; done      #---> to run on loop / stress app
+
+##For VPA
+git clone https://github.com/kubernetes/autoscaler.git
+cd autoscaler/vertical-pod-autoscaler
+./hack/vpa-up.sh
 
