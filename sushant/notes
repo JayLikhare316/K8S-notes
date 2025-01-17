@@ -1,3 +1,40 @@
+TOPICS TO LEARN 
+
+Core Concepts: 
+Monolithic vs MicroServices, Kubernetes Architecture, Setup on Local/AWS EC2, kubectl, Pods, Namespaces, Labels ,
+Selectors, Annotations 
+
+Workloads:
+Deploymnets, StatefulSets, Daemonsets, ReplicaSets, Jobs, CronJobs
+
+Networking:
+Cluster Networking, Services, Ingress, Network Policies
+
+Storage:
+persistent volume (PV), persistent volume claims (PVC), StorageClasses, ConfigMaps, Secrets 
+
+Scaling and Scheduling:
+HPA, VPA, Node Affinity, Taints and Toleration, Resource Quotas, Limit , Probes 
+
+Cluster Administration:
+RBAC, Cluster upgrade, Custom Resource Definitions (CRDs)
+
+Monitoring and Logging:
+Metrics server, Monitoring tools, Logging tools, Prometheus, Grafana, ELK Stack
+
+Advanced Features:
+Operators, Helm, Service Mesh, Kubernetes API
+
+Security:
+Pod security Standards (PSS), Image Scanning, Network Policies, Secret Encryption, Network Policies, RBAC
+
+
+
+
+
+
+
+
 Creating Ways of Kubernetes Cluster 
 1.kubeadm
 2.Minikube (local/ec2)
@@ -196,7 +233,7 @@ kubectl get svc -n nginx-ns -o wide  #---> to see all services in wide
 
 kubectl port-forward service/nginx-service -n nginx-ns 80:80 --address=0.0.0.0    #---> to forward the port of the service
 #syntax
-kubectl port-forwar service/(service-name) -n (namespac) (local-port):(remote-port) --address=0.0.0.0
+kubectl port-forward service/(service-name) -n (namespac) (local-port):(remote-port) --address=0.0.0.0
 
 # What is ingress?
 Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource
