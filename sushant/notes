@@ -342,3 +342,110 @@ git clone https://github.com/kubernetes/autoscaler.git
 cd autoscaler/vertical-pod-autoscaler
 ./hack/vpa-up.sh
 
+# What is Node affinity
+Node affinity is a way to specify which nodes a pod can run on. It is used to ensure 
+that a pod runs on a node that has the required resources and meets the specified requirements.
+
+# RBAC (Role -Based Access Control)
+RBAC is a way to control access to resources in a cluster. It is used to ensure that
+users and groups have the correct permissions to perform actions on resources.
+
+Namespace: Roles, RoleBinding
+Cluster: ClusterRole, ClusterRoleBinding
+# RBAC
+kubectl create clusterrolebinding my-cluster-role-binding --clusterrole=my-cluster-role --user=my-user
+#syntax
+kubectl create clusterrolebinding (cluster-role-binding-name) --clusterrole=(cluster-role-name) --user=(user-name)      #---> to create a cluster role binding
+# RBAC
+
+
+1. Service Account:
+kubectl get sa          #--> to get all service accounts
+kubectl get sa -o yaml  #--> to get all service accounts in yaml format
+kubectl get sa -o wide  #--> to get all service accounts in wide format
+2. Roles
+kubectl get roles      #--> to get all roles
+kubectl get roles -o yaml  #--> to get all roles in yaml format
+kubectl get roles -o wide  #--> to get all roles in wide format
+kubectl create role my-role --verb=get --verb=list --verb=watch --resource=pods --namespace=my-namespace
+#syntax
+kubectl create role (role-name) --verb=(verb) --resource=(resource)      #---> to create a role
+3. Role Bindings
+kubectl get rolebindings      #--> to get all role bindings
+kubectl get rolebindings -o yaml  #--> to get all role bindings in yaml format
+kubectl get rolebindings -o wide  #--> to get all role bindings in wide format
+kubectl create rolebinding my-role-binding --role=my-role --user=my-user --namespace=my-namespace
+#syntax
+kubectl create rolebinding (role-binding-name) --role=(role-name) --user=(user-name) --namespace=(namespace-name)      #---> to create a role binding
+4. Cluster Roles
+kubectl get clusterroles      #--> to get all cluster roles
+kubectl get clusterroles -o yaml  #--> to get all cluster roles in yaml format
+kubectl get clusterroles -o wide  #--> to get all cluster roles in wide format
+kubectl create clusterrole my-cluster-role --verb=get --verb=list --verb=watch --resource=pods 
+#syntax
+kubectl create clusterrole (cluster-role-name) --verb=(verb) --resource=(resource) #---> to create a cluster role
+5. Cluster Role Bindings
+kubectl get clusterrolebindings      #--> to get all cluster role bindings
+kubectl get clusterrolebindings -o yaml  #--> to get all cluster role bindings in yaml format
+kubectl get clusterrolebindings -o wide  #--> to get all cluster role bindings in wide format
+kubectl create clusterrolebinding my-cluster-role-binding --clusterrole=my-cluster-role --user=my-user
+#syntax
+kubectl create clusterrolebinding (cluster-role-binding-name) --clusterrole=(cluster-role-name) --user=(user-name)   #---> to create a cluster role binding
+
+kubectl auth whoami    #---> to get the current user
+
+kubectl apply -f .   #---> to apply the configuration in the current directory/folder all included YAML files will be run
+kubectl delete -f .   #---> to delete the configuration in the current directory/folder all included YAML files will be run
+
+kubectl can-i get pods --as=my-user  #---> to check if the user has the permission to get
+#syntax
+kubectl can-i (verb) (resource) --as=(user-name)      #---> to check if the user has the permission to perform the action
+
+apiGroups:
+- apiextensions.k8s.io    #---> used in 
+- apps                #---> used in Deployment version
+- authentication.k8s.io  #---> used in 
+- autoscaling            #---> used in autoscliing version
+- batch          #used in 
+- certificates.k8s.io    #---> used in 
+- core
+- extensions
+- networking.k8s.io
+- policy
+- rbac.authorization.k8s.io   #---> used in RBAC Yaml version
+- storage.k8s.io
+
+Resources:
+- configmaps
+- cronjobs
+- deployments
+- events
+- jobs
+- limitranges
+- namespaces
+- nodes
+- persistentvolumeclaims
+- persistentvolumes
+- pods
+- replicationcontrollers
+- resourcequotas
+- secrets
+- serviceaccounts
+- services
+- storageclasses
+- volumes
+
+Verbs:
+- create
+- delete
+- get
+- list
+- patch
+- read
+- update
+
+
+
+
+
+
