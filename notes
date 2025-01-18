@@ -269,20 +269,110 @@ kubectl get service -o wide -> to get additional information about service
 learn about next 2 services
 
 ## Config Map
- non-confidential information are sent by configmap.
- imperative way: kubectl create configmap/cm --from-file=(file name)
-  eg:- kubectl create configmap cm --from-file=index.html
-  declarative way:
-  first create a yaml file by dry running a configmap file
-  kubectl create configmap/cm nginx-cm --from-file=index.html --dry-run=client -o yaml > cm.yaml
-  then make changes in the created yaml file.
-  (reffer to sir repo)
+- non-confidential information are sent and stored by configmap.
+- 
+ # commands
+ This command will create a configmap directly from the data we gave it in the command itself.
+ kubectl create configmap/cm (configmap_name) --from-literal=KEY=VALUE .. 
+ eg:- kubectl create configmap/cm exampleconfigmap --from-literal=1_database_name=data1 --from-literal=2_database_name=data2
+
+ If we have one or more files that contains data and we want to create a configmap from those files,
+ we can do that with the following command.
+ imperative way: kubectl create configmap/cm (configmap_name) --from-file=KEY=VALUE ..
+ eg:- kubectl create configmap/cm exampleconfigmap --from-file=data1.txt --from-file=data2.txt
+
+ If we have a directory that contains the files that contains imp data and we want to make a configmap from those files.
+ kubectl create configmap/cm (configmap_name) --from-file=directory_name/ 
+ eg:- kubectl create configmap/cm exampleconfigmap --from-file=demo_dir/
+
+#demo configmap yaml file:-
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: exampleconfigmap
+data:
+ 1_database_name: data1
+ 2_database_name: data2
+we can create a config map from a yaml file like this.
+To use a configmap in a pod, we need to "reference" it in the pod spec.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx:1.14.1
+    envform:
+    - configMapRef:
+     name: exampleconfigmap
+To use a configmap in a pod as a "Volume", we need to provide the path where the pod to be attached and provide the configmap.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx:1.14.1
+    volumeMounts:
+    - name: examplevolumemount
+      mountPath: "/config"
+      readOnly: "true"
+  Volumes:
+   - name: examplevolumemount
+     configMap:
+      name: exampleconfigmap
+
+ declarative way:
+ first create a yaml file by dry running a configmap file
+ kubectl create configmap/cm nginx-cm --from-file=index.html --dry-run=client -o yaml > cm.yaml
+
+ then make changes in the created yaml file.
+ (reffer to sir repo)
  
  ## secret
- confidential information are sent by secret
- it encodes the data in base64.
+- confidential information are sent and stored by secret.
+- it encodes the data in base64.
+- it is used to store sensitive information such as database credentials, api keys, etc.
+ 
+ #commands
  kubectl secret --help --> to get all the options.
- to decode --> echo <base64 encoded string> | base64 --decode
+
+ kubectl create secret generic (secret_name) --from-literal=KEY=VALUE ..
+ eg:- kubectl create secret generic mysecret --from-literal=name=prathamesh
+ This command will create a secret named mysecret with a key named name and value prathamesh and it will encrypt the value in base64.
+ 
+ kubectl get secret --> to get all the secrets.
+ kubectl get secret <secret_name> --> to get a specific secret.
+ kubectl get secret <secret_name> -o yaml--> to get the content of a specific secret. But it will be encrypted in base64.
+ echo <base64 encoded string> | base64 --decode/-d --> to decode the base64 encoded string.
+
+# demo secret yaml file:-
+apiVersion: v1
+kind: Secret
+metadata:
+ name: exampleSecret
+data:
+ 1_password: "hello"
+ 2_password: "world"
+
+To use secret as a volume in pod.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx:1.14.1
+    volumeMounts:
+    - name: secretvolumemount
+      mountPath: "/secret"
+  Volumes:
+   - name: secretvolumemount
+     secret:
+      secretName: exampleSecret
 
 
  #namespace _> it provides logical divison
@@ -321,3 +411,139 @@ It is not deleted instantly.
 
 todays topic- memory & HPA --> Sushant chutke padh lena ye.
 # Horizontal Pod Autoscaler (HPA)
+
+## Persistant Volume (PV)
+- When we store data in a pod, it is not persistent. It will be deleted when the pod is restarted or deleted.
+- Persistant volume ensures that the data is stored even after the pod is restarted or deleted.
+- We use PVC(persistant volume claim) to use the PV in our pod. PV can not be used directly in pod.
+- The PV should match the PVC(persistant volume claim) in terms of storage size and access mode while writing it in a yaml file.
+
+# demo yaml file of Persistant Volume (PV):-
+apiVerssion : v1
+kind: PersistentVolume
+metadata: 
+ name: example-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+
+# demo yaml file of Persistant Volume Claim(PVC):-
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+ 
+ # demo yaml pod file using pvc as volume:- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: example-pvc
+  containers:
+    - name: task-pv-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: task-pv-storage
+
+In above first we create a PV to allocate storage space on the host machine. Then we create a PVC to request storage space from
+the cluster. Then we assigned the PVC as a volume to the pod. The pod can now use the storage space allocated by the PV.
+
+ Types:
+ Host 
+ Addons
+ fsx is for windows
+
+ Volume Add-ons:
+ These are extensions or plugins that enhance how Kubernetes handles storage.
+ Types of Kubernetes Volume Add-ons:-(some of the types)
+  Container Storage Interface (CSI)
+  Persistent Volume Claims (PVC) Enhancers
+ 
+ Container Storage Interface (CSI)
+
+
+## Namespace
+- a logical grouping of resources.
+- Namespace is not specified to a node it is seen across the cluster.
+
+ # command 
+ imperative way: kubectl create namespace/ns (namespace_name)
+
+#Q. Difference between stateful set and deployment?(interview que)
+
+## Stateful Set
+- Every stateful set has a PV(persistant volume) on it.
+- It is espesally used for Databases
+- It is not deleted instantly.
+- 
+
+## Daemon Set
+- It is used for running a pod on every node in the cluster.
+- It is espesialy used for monitoring.
+- it has a higher priority than deployment.
+- eg:- kubelet, 
+
+#Q. Difference between Daemon set and Deployment?
+#Q. Difference between Stateful set, Daemon set and Deployment? (min 5 points)
+#Ans 
+ Stateful set: 
+ - Manages stateful applications with stable, unique network identities and persistent storage.( Stateful applications are
+  those that maintain data or state across restarts, meaning the application's data and network identity persist over time.)
+ - Pods have unique, stable identities (e.g., pod-0, pod-1) that persist across rescheduling.
+ - Uses persistent volume claims (PVCs) to provide stable storage linked to pod identity. Every stateful set has a 
+  PV(persistant volume) on it.
+ - Pods are scheduled in a specific order; replicas are not started until previous ones are running. 
+ - Use Cases:- Databases (e.g., MySQL, Cassandra), applications requiring stable identity or storage.
+
+ Daemon set:
+ - A DaemonSet ensures that a single instance of a pod is running on each node in a cluster.This is particularly useful
+  for running pods as system daemons or background processes that need to run on every node in the cluster.
+ - Each pod is tied to a specific node, and no two pods run on the same node.
+ - Storage is node-specific and generally ephemeral(temporary storage that exists only during the lifecycle of a pod).
+ - Ensures a pod is scheduled on every eligible node.
+ - use cases:- Logging agents, monitoring daemons, and node-level services.
+
+ Deployment:
+ - Manages stateless applications with replicas of pod.
+ - All pods are identical and interchangeable.
+ - Can use ephemeral storage and PVCs as per the need.
+ - Pods are scheduled independently and can run simultaneously.
+ - use cases:- Stateless web applications, APIs, and batch processing.
+
+
+interview topics:
+Architecture
+imp components / basic components
+pod , deploymnet , replicaset , service
+
+
+
+gives pod cpu consumption --> eskctl top pods
+gives nodes cpu consumption --> eksctl top nodes
+to see logs of pod --> kubectl logs pod/pod_name -n kube-system
+to see logs of deployment --> kubectl logs deployment/deplopyment_name -n kube-system
+
+
+## HPA (Horizontal Pod Autoscaler)
