@@ -252,7 +252,7 @@ spec:
     port: 80
     targetPort: http-web-svc
 
->>>commands
+>>> commands
 
 kubectl get service -> to get service
 kubectl get service -A -> to get all services in namespaces
@@ -508,37 +508,35 @@ the cluster. Then we assigned the PVC as a volume to the pod. The pod can now us
 #Q. Difference between Daemon set and Deployment?
 #Q. Difference between Stateful set, Daemon set and Deployment? (min 5 points)
 #Ans 
- Stateful set: 
- - Manages stateful applications with stable, unique network identities and persistent storage.( Stateful applications are
-  those that maintain data or state across restarts, meaning the application's data and network identity persist over time.)
- - Pods have unique, stable identities (e.g., pod-0, pod-1) that persist across rescheduling.
- - Uses persistent volume claims (PVCs) to provide stable storage linked to pod identity. Every stateful set has a 
-  PV(persistant volume) on it.
- - Pods are scheduled in a specific order; replicas are not started until previous ones are running. 
- - Use Cases:- Databases (e.g., MySQL, Cassandra), applications requiring stable identity or storage.
+#  Stateful set: 
+#  - Manages stateful applications with stable, unique network identities and persistent storage.( Stateful applications are
+#   those that maintain data or state across restarts, meaning the application's data and network identity persist over time.)
+#  - Pods have unique, stable identities (e.g., pod-0, pod-1) that persist across rescheduling.
+#  - Uses persistent volume claims (PVCs) to provide stable storage linked to pod identity. Every stateful set has a 
+#   PV(persistant volume) on it.
+#  - Pods are scheduled in a specific order; replicas are not started until previous ones are running. 
+#  - Use Cases:- Databases (e.g., MySQL, Cassandra), applications requiring stable identity or storage.
 
- Daemon set:
- - A DaemonSet ensures that a single instance of a pod is running on each node in a cluster.This is particularly useful
-  for running pods as system daemons or background processes that need to run on every node in the cluster.
- - Each pod is tied to a specific node, and no two pods run on the same node.
- - Storage is node-specific and generally ephemeral(temporary storage that exists only during the lifecycle of a pod).
- - Ensures a pod is scheduled on every eligible node.
- - use cases:- Logging agents, monitoring daemons, and node-level services.
+#  Daemon set:
+#  - A DaemonSet ensures that a single instance of a pod is running on each node in a cluster.This is particularly useful
+#   for running pods as system daemons or background processes that need to run on every node in the cluster.
+#  - Each pod is tied to a specific node, and no two pods run on the same node.
+#  - Storage is node-specific and generally ephemeral(temporary storage that exists only during the lifecycle of a pod).
+#  - Ensures a pod is scheduled on every eligible node.
+#  - use cases:- Logging agents, monitoring daemons, and node-level services.
 
- Deployment:
- - Manages stateless applications with replicas of pod.
- - All pods are identical and interchangeable.
- - Can use ephemeral storage and PVCs as per the need.
- - Pods are scheduled independently and can run simultaneously.
- - use cases:- Stateless web applications, APIs, and batch processing.
+#  Deployment:
+#  - Manages stateless applications with replicas of pod.
+#  - All pods are identical and interchangeable.
+#  - Can use ephemeral storage and PVCs as per the need.
+#  - Pods are scheduled independently and can run simultaneously.
+#  - use cases:- Stateless web applications, APIs, and batch processing.
 
 
 interview topics:
 Architecture
 imp components / basic components
 pod , deploymnet , replicaset , service
-
-
 
 gives pod cpu consumption --> eskctl top pods
 gives nodes cpu consumption --> eksctl top nodes
@@ -547,3 +545,22 @@ to see logs of deployment --> kubectl logs deployment/deplopyment_name -n kube-s
 
 
 ## HPA (Horizontal Pod Autoscaler)
+
+>>>INGRESS {imp}
+
+Provides traffic into cluster,there is a diff betw service & ingress.
+Ingress service is used to expose a pod to outside world,ingress is used to expose multiple pods to
+outside world.
+
+- It is also a load balancer {ALB}.
+
+Q. LoadBalancer v/s Ingress service?
+Ans:
+- LoadBalancer is used to expose a single service to outside world.
+- Ingress service is used to expose multiple services to outside world.
+- LoadBalancer is used to expose a service to outside world using a load balancer.
+- Ingress service is used to expose multiple services to outside world using a load balancer.
+- LoadBalancer is used to expose a service to outside world using a load balancer.
+- Ingress service is used to expose multiple services to outside world using a load balancer.
+
+# 2 types of Controller --> aws loadbalance controllor [alb] , nginx ingress controllor.
