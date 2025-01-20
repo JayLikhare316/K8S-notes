@@ -44,133 +44,6 @@ Creating Ways of Kubernetes Cluster
 
 #################################################################################
  
- 
- ###Install and  Creating Cluster WITH KIND 
-1. Create a bash file 
-
-#!/bin/bash
-[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
-chmod +x ./kind
-sudo cp ./kind /usr/local/bin/kind
-
-VERSION="v1.30.0"
-URL="https://dl.k8s.io/release/${VERSION}/bin/linux/amd64/kubectl"
-INSTALL_DIR="/usr/local/bin"
-
-curl -LO "$URL"
-chmod +x kubectl
-sudo mv kubectl $INSTALL_DIR/
-kubectl version --client
-
-rm -f kubectl
-rm -rf kind
-
-echo "kind & kubectl installation complete."
-
-2. chmod +x bash file
-3. run the file 
-4. sudo yum install docker 
-5. sudo systemctl start docker && sudo systemctl enable docker 
-6. sudo usermod -aG docker $USER && newgrp docker
-7. mkdir kind-cluster
-8.cd kind-cluster
-9. vim config.yaml 
-
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-
-nodes:
-- role: control-plane
-- role: worker
-- role: worker
-  extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 443
-    protocol: TCP
-
-10. kind create cluster --name=demo-cluster --config=config.yaml   #---> this will create a cluster with 3 nodes
-11. kubectl cluster-info --context demo-cluster      #---> to see the cluster info
-
-###################################################################################################################
-
-## Install and Creating Cluster With Minicube 
-1. mkdir minicube-cluster
-2. cd minicube-cluster
-3. sudo yum install -y curl wget apt-transport-https
-4. sudo yum install -y docker.io
-5. sudo systemctl enable --now docker
-6. sudo usermod -aG docker $USER && newgrp docker
-7. curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-8. chmod +x minikube
-9. sudo mv minikube /usr/local/bin/
-10. curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-11. chmod +x /kubectl
-12. sudo mv /kubectl /usr/local/bin/
-13. minikube start --driver=docker --vm=true 
-14. kubectl cluster-info --context=minikube
-
-#########################################################################################################
-
-### Install and creating a cluster with kubeadm
-
-#You would need 2 instances/nodes 1.master 2. worker worker nodes can be multiple 
-#EXPOSE port 6443 on security groups of EC2
-
-1. sudo swapoff -a     #---> command on both EC2 
-2.                      #---> command on both EC2
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-overlay
-br_netfilter
-EOF
-sudo modprobe overlay
-sudo modprobe br_netfilter
-3.                        #---> command on both EC2
-cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-iptables  = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-net.ipv4.ip_forward                 = 1
-EOF
-sudo sysctl --system
-lsmod | grep br_netfilter
-lsmod | grep overlay
-4.                                      #---> command on both EC2
-sudo yum update
-sudo yum install -y ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo yum update
-sudo yum install -y containerd.io
-containerd config default | sed -e 's/SystemdCgroup = false/SystemdCgroup = true/' -e 's/sandbox_image = "registry.k8s.io\/pause:3.6"/sandbox_image = "registry.k8s.io\/pause:3.9"/' | sudo tee /etc/containerd/config.toml
-sudo systemctl restart containerd
-sudo systemctl status containerd
-5.                              #---> command on both EC2
-sudo yum update
-sudo yum install -y apt-transport-https ca-certificates curl gpg
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo yum update
-sudo yum install -y kubelet kubeadm kubectl
-sudo yum-mark hold kubelet kubeadm kubectl
-6. sudo kubeadm init     #---> command on one EC2 (master node)
-7.                        #---> command on one EC2 (master node)
- mkdir -p "$HOME"/.kube
- sudo cp -i /etc/kubernetes/admin.conf "$HOME"/.kube/config
- sudo chown "$(id -u)":"$(id -g)" "$HOME"/.kube/config
-8.kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.0/manifests/calico.yaml    #---> command on master node
-9.kubeadm token create --print-join-command #---> command on master node
-####it will generate a token to join the worker nodes to the cluster copy the token 
-10. sudo kubeadm reset pre-flight checks    #---> command on worker node
-11. sudo kubeadm join <private-ip-of-control-plane>:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash> --cri-socket 
-"unix:///run/containerd/containerd.sock" --v=5        #---> command on worker node paste the token here 
-
-
-###########################################################################################
-
 container --> pod --> deployment --> service --> user 
 
 # How to create a namespace 
@@ -397,9 +270,9 @@ kubectl auth whoami    #---> to get the current user
 kubectl apply -f .   #---> to apply the configuration in the current directory/folder all included YAML files will be run
 kubectl delete -f .   #---> to delete the configuration in the current directory/folder all included YAML files will be run
 
-kubectl can-i get pods --as=my-user  #---> to check if the user has the permission to get
+kubectl auth can-i get pods --as=my-user  #---> to check if the user has the permission to get
 #syntax
-kubectl can-i (verb) (resource) --as=(user-name)      #---> to check if the user has the permission to perform the action
+kubectl auth can-i (verb) (resource) --as=(user-name)      #---> to check if the user has the permission to perform the action
 
 apiGroups:
 - apiextensions.k8s.io    #---> used in 
@@ -444,7 +317,146 @@ Verbs:
 - read
 - update
 
+#################################################################################################33
 
+#setting up dashboard
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+kubectl get deployments -n kubernetes-dashboard
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+
+
+kubectl apply -f dashboard-admin-user.yml
+kubectl -n kubernetes-dashboard create token admin-user
+kubectl proxy --port --address=0.0.0.0 --accept-hosts='*' #--> this will expose the dashboard on port 8001 on your local machine
+kubectl proxy ----> this will expose on 127.0.0.1  
+
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+###############################################################################################
+
+CRDs (Custom Resource Definitions):
+
+It is to craete a custom resource definition. This is used to create a custom resource. The custom resource definition is used
+to define the schema of the custom resource. The custom resource definition is used to define the structure of
+the custom resource. The custom resource definition is used to define the fields of the custom resource.
+
+kubectl get crd -A   #---> to get all the custom resource definitions in the cluster
+kubectl get crd -A --all-namespaces #---> to get all the custom resource definitions
+
+#########################################################################################################
+
+Helm:
+helm is package manager for kubernetes
+
+#Chart Management
+helm create <name>                      # Creates a chart directory along with the common files and directories used in a chart.
+helm package <chart-path>               # Packages a chart into a versioned chart archive file.
+helm lint <chart>                       # Run tests to examine a chart and identify possible issues:
+helm show all <chart>                   # Inspect a chart and list its contents:
+helm show values <chart>                # Displays the contents of the values.yaml file
+helm pull <chart>                       # Download/pull chart 
+helm pull <chart> --untar=true          # If set to true, will untar the chart after downloading it
+helm pull <chart> --verify              # Verify the package before using it
+helm pull <chart> --version <number>    # Default-latest is used, specify a version constraint for the chart version to use
+helm dependency list <chart>            # Display a list of a chart’s dependencies:
+
+#Install and Uninstall Apps
+helm install <name> <chart>                           # Install the chart with a name
+helm install <name> <chart> -n <namespace> --create-namespace  # Install the chart with a name and create a namespace if it does not exist
+helm install <name> <chart> --namespace <namespace>   # Install the chart in a specific namespace
+helm install <name> <chart> --set key1=val1,key2=val2 # Set values on the command line (can specify multiple or separate values with commas)
+helm install <name> <chart> --values <yaml-file/url>  # Install the chart with your specified values
+helm install <name> <chart> --dry-run --debug         # Run a test installation to validate chart (p)
+helm install <name> <chart> --verify                  # Verify the package before using it 
+helm install <name> <chart> --dependency-update       # update dependencies if they are missing before installing the chart
+helm uninstall <name>                                 # Uninstall a release
+
+#Perform App Upgrade and Rollback
+helm upgrade <release> <chart>                            # Upgrade a release
+helm upgrade <release> <chart> --atomic                   # If set, upgrade process rolls back changes made in case of failed upgrade.
+helm upgrade <release> <chart> --dependency-update        # update dependencies if they are missing before installing the chart
+helm upgrade <release> <chart> --version <version_number> # specify a version constraint for the chart version to use
+helm upgrade <release> <chart> --values                   # specify values in a YAML file or a URL (can specify multiple)
+helm upgrade <release> <chart> --set key1=val1,key2=val2  # Set values on the command line (can specify multiple or separate valuese)
+helm upgrade <release> <chart> --force                    # Force resource updates through a replacement strategy
+helm rollback <release> <revision>                        # Roll back a release to a specific revision
+helm rollback <release> <revision>  --cleanup-on-fail     # Allow deletion of new resources created in this rollback when rollback fails
+
+#List, Add, Remove, and Update Repositories
+helm repo add <repo-name> <url>   # Add a repository from the internet:
+helm repo list                    # List added chart repositories
+helm repo update                  # Update information of available charts locally from chart repositories
+helm repo remove <repo_name>      # Remove one or more chart repositories
+helm repo index <DIR>             # Read the current directory and generate an index file based on the charts found.
+helm repo index <DIR> --merge     # Merge the generated index with an existing index file
+helm search repo <keyword>        # Search repositories for a keyword in charts
+helm search hub <keyword>         # Search for charts in the Artifact Hub or your own hub instance
+
+#Helm Release monitoring
+helm list                       # Lists all of the releases for a specified namespace, uses current namespace context if namespace not specified
+helm list --all                 # Show all releases without any filter applied, can use -a
+helm list --all-namespaces      # List releases across all namespaces, we can use -A
+helm list -l key1=value1,key2=value2 # Selector (label query) to filter on, supports '=', '==', and '!='
+helm list --date                # Sort by release date
+helm list --deployed            # Show deployed releases. If no other is specified, this will be automatically enabled
+helm list --pending             # Show pending releases
+helm list --failed              # Show failed releases
+helm list --uninstalled         # Show uninstalled releases (if 'helm uninstall --keep-history' was used)
+helm list --superseded          # Show superseded releases
+helm list -o yaml               # Prints the output in the specified format. Allowed values: table, json, yaml (default table)
+helm status <release>           # This command shows the status of a named release.
+helm status <release> --revision <number>   # if set, display the status of the named release with revision
+helm history <release>          # Historical revisions for a given release.
+helm env                        # Env prints out all the environment information in use by Helm.
+
+#Download Release Information
+helm get all <release>      # A human readable collection of information about the notes, hooks, supplied values, and generated manifest file of the given release.
+helm get hooks <release>    # This command downloads hooks for a given release. Hooks are formatted in YAML and separated by the YAML '---\n' separator.
+helm get manifest <release> # A manifest is a YAML-encoded representation of the Kubernetes resources that were generated from this release's chart(s). If a chart is dependent on other charts, those resources will also be included in the manifest.
+helm get notes <release>    # Shows notes provided by the chart of a named release.
+helm get values <release>   # Downloads a values file for a given release. use -o to format output
+
+#Plugin Management
+helm plugin install <path/url1>     # Install plugins
+helm plugin list                    # View a list of all installed plugins
+helm plugin update <plugin>         # Update plugins
+helm plugin uninstall <plugin>      # Uninstall a plugin
+
+#############################################################################
+What is Service Mesh ?
+A service mesh is a configurable infrastructure layer for microservices applications. 
+It makes communication between services easier,more reliable, and more secure. 
+It provides features such as service discovery, load balancing, circuit breaking
+
+Service Mesh Tool:
+- Istio
+- Linkerd
+- Consul
+- Service Mesh Interface (SMI)
+- Open Service Mesh (OSM)
+- Kuma
+- AWS App Mesh
+- Google Service Mesh
+- Azure Service Mesh
 
 
 
