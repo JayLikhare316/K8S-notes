@@ -564,3 +564,5 @@ Ans:
 - Ingress service is used to expose multiple services to outside world using a load balancer.
 
 # 2 types of Controller --> aws loadbalance controllor [alb] , nginx ingress controllor.
+
+bitnami lena hai for ingress.{Artifact hub}
