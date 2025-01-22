@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: httpd-index
+ # namespace: dev-httpd
+data:
+  index.html: |
+    SUSHANT SONBARSE

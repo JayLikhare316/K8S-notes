@@ -9,3 +9,4 @@ nodes:
     protocol: udp
 - role: worker
 - role: worker
+- role: worker

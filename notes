@@ -804,5 +804,202 @@ persistant volume
 host
 addons --> CSI drivers EBS Volume 
 
+#######Ingress
 
 
+aws lb vs ingress controller
+
+1.aws alb                       #---> managed service
+2. nginx ingress controller     #---> open-source
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+  labels:
+    name: myingress
+spec:
+  rules:
+  - host: <Host>
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: <Service>
+            port: 
+              number: <Port>
+
+##Task 
+
+#microserivec1
+build a docker image nginx with free css template 
+deploy on kubernetes  dev-nginx
+#microservice2
+httpd image send index.html via configMap  dev-httpd
+#microserive3
+tomcat dev-tomcat
+
+all in 3 diff namespace 
+
+ingress controller nginx-ingress controller 
+
+##task2 
+node affinity
+anti affinty 
+node selector 
+pod affinity
+taint and toleranace 
+
+Node Selector: It’s a way to tell Kubernetes to schedule a pod on a specific node based on the node's label. For example, you might want a pod to only run on a node with a label like "disktype=ssd".
+
+Node Affinity: This is a more advanced version of Node Selector. It lets you specify more complex rules, like requiring a pod to be scheduled on nodes with certain labels, or preferring nodes with those labels but not requiring them.
+
+Pod Affinity: This rule helps you schedule pods to be on the same node as other specific pods. For example, you might want your "frontend" pod to always run on the same node as a "backend" pod for faster communication.
+
+Pod Anti-Affinity: This is the opposite of Pod Affinity. It helps you avoid putting certain pods on the same node. For example, you might want to keep your "backend" pods spread out across different nodes to avoid a failure if one node goes down.
+
+Taints and Tolerations: Taints are applied to nodes to mark them with special conditions, like saying "don’t schedule pods here". Tolerations are set on pods to allow them to "ignore" these conditions and still be scheduled on those tainted nodes.
+
+In short:
+
+Node Selector and Node Affinity control where your pods are scheduled based on node labels.
+Pod Affinity and Pod Anti-Affinity control which pods should or should not be scheduled on the same node.
+Taints and Tolerations control how pods can be scheduled on nodes that have special conditions.
+
+
+
+
+
+
+# Dockerfile
+FROM nginx:1.19.6-alpine
+
+WORKDIR /app
+
+COPY . . 
+
+Run mv oxer /usr/share/nginx/html
+
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd
+  namespace: httpd-ns
+spec:
+  selector:
+    matchLabels:
+      app: httpd
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+      - name: nginx-container
+        image: httpd:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name:  httpd-volume
+          mountPath:  /var/www/html
+          subPath: index.html
+      volumes:
+        - name:  httpd-volume
+        configMap:
+          name: my-html-config
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd
+  namespace: httpd
+spec:
+  selector:
+    app: httpd
+  ports:
+  - port: 80
+    targetPort: 80
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp
+data:
+  key: value
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat
+  namespace: tomcat-ns
+spec:
+  selector:
+    matchLabels:
+      app: tomcat
+  template:
+    metadata:
+      labels:
+        app: tomcat
+    spec:
+      containers:
+      - name: tomcat
+        image: prathameshbhujade/tomcat_student-ui:1.0
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat
+  namespace: tomcat-ns
+spec:
+  selector:
+    app: tomcat
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /nginx
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /apache
+        backend:
+          service:
+            name: apache
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /tomcat
+        backend:
+          service:
+            name: tomcat
+            port:
+              number: 8080
+---
