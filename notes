@@ -566,3 +566,31 @@ Ans:
 # 2 types of Controller --> aws loadbalance controllor [alb] , nginx ingress controllor.
 
 bitnami lena hai for ingress.{Artifact hub}
+
+Q.What is probe?
+
+- liveness probe: checks if the container is running or not.
+- readiness probe: checks if the container is ready to accept traffic or not.
+- startup probe: checks if the container is ready to accept traffic or not.
+
+Q.Difference between loadbalancer controller and ingress controller?
+- loadbalancer controller is used to expose a service to outside world using a load balancer.
+- ingress controller is used to expose multiple services to outside world using a load balancer.
+
+
+Q.How loadbalancer checks if the service is healthy?
+
+- it checks the liveness probe of the service.
+- it checks the readiness probe of the service.
+- it checks the startup probe of the service.
+
+task:-
+
+want tomcat service
+one node pr 1 tomcat
+replica 1
+nodeselector lgane hai
+to check service is running have to implemant probe.
+database cluster k andar banana hai with persistant volume.
+ingress for service access.
+tomcat pod ko resource allocation krna hai =500m [1/2core] cpu request limit 1core , memory =2gbram
