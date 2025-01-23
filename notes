@@ -409,7 +409,7 @@ It is not deleted instantly.
 
 #Daemon Set -->
 
-todays topic- memory & HPA --> Sushant chutke padh lena ye.
+todays topic- memory & HPA
 # Horizontal Pod Autoscaler (HPA)
 
 ## Persistant Volume (PV)
@@ -594,3 +594,4 @@ to check service is running have to implemant probe.
 database cluster k andar banana hai with persistant volume.
 ingress for service access.
 tomcat pod ko resource allocation krna hai =500m [1/2core] cpu request limit 1core , memory =2gbram
+
