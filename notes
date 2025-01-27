@@ -143,7 +143,8 @@ create permenant alias --> edit /etc/bashrc and add alias k=kubectl at the botto
 
 
 ## ReplicaSet
- It maintains a stable set of replicas (pods) running at any given time. Even if we delete a pod of the replicaset it will 
+ 
+ It maintains a stable set of replicas of pods running at any given time. Even if we delete a pod of the replicaset it will 
  automatically make a new pod. 
  Uses label selectors to identify which pods it manages.
 
@@ -180,11 +181,13 @@ command to list replicaset --> kubectl get rs
  As a user we create a deployment set that creates the replicasets and manages it.
  It can be used to manage multiple ReplicaSets at the same time.
  If we want to update a the pod we can do that easily without any downtime using deployment. As it will update one pod and direct its
- traffic to other pods or can create new pod. It will do this for each pod to avoid downtime. this increase in pods to update change is called 
- rollout update.
+ traffic to other pods or can create new pod. It will do this for each pod to avoid downtime. this increase in pods to update change is
+ called 'ROLLOUT UPDATE'.
 
  We can make changes to our go back to previous changes in deployment.
  command --> kubectl rollout undo deployment/(deployment_name)
+ command for ROLLing UPDATE --> kubectl set image deployment/(deployment_name) (container_name)=(image_name)
+  eg:- kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
 
 #demo deployment file:-
 filename --> deployment.yaml
@@ -214,6 +217,150 @@ command to list deployments --> kubectl get deploy/deployment/deployments
 
 # Hirerchy--> deployment -> ReplicaSet -> pod (deploy creates replicaset which then creates pods)       
 kubctl api-resources --> to check all the api resources available in the cluster.
+
+
+#Q. Difference between stateful set and deployment?(interview que)
+
+## Stateful Set
+https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/
+
+- every pod in the stateful set have numbering according to its state to maintain the order of the pods.(eg:- pod0, pod1, pod2..)
+- Every stateful set has a PV(persistant volume) on it.
+- It is especially used for Databases.
+- It is not deleted instantly.
+IMP:
+when we make a mysql stateful set we mention the volume within the stateful yaml
+The service created for the stateful set should be a headless service to be used internally and not execceble from outside the cluster.
+# Demo mysql stateful set yamal file:-                          
+apiVersion: v1                                                   
+kind: StatefulSet                                               
+metadata:    
+ name: mysql-data                                                 
+ labels:                                                      
+  app: mysql                                                      
+spec:
+serviceName: mysql-service                                     
+ replicas: 1                                                       
+ selector:                                                           
+  app: nysql                                                     
+ template:                                                        
+  metadata:                                                         
+   name: mysql-data                                                 
+   labels:
+    app: mysql
+  spec:
+   containers:
+   - name: mysql-data
+     image: mysql:8.0 
+     ports:
+     - port: 3306
+       targetPort: 3306
+     env:
+     - name: MYSQL_ROOT_PASSWORD # sets the root password to "root"
+       value: root
+     - name: MYSQL_DATABASE # creates a database named "devops"
+       value: devops
+     volumeMounts:
+     - name: mysql-data
+       mountPath: /var/lib/mysql
+
+VolumeClaimTemplates:
+- metadata:
+      name: mysql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+# demo headless service yaml file:-
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql-service
+  namespace: mysql
+spec:
+  clusterIP: None # clusterIP is not required to make it a headless service
+  selector:
+    app: mysql
+  ports:
+    protocol: TCP
+    port: 3306
+    targetPort: 3306
+
+   
+## Daemon Set
+- It is used for running a pod on every node in the cluster.
+- It is espesialy used for monitoring.
+- it has a higher priority than deployment.
+- eg:- kubelet, 
+# demo daemon yaml file:-
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx
+  labels:
+    app: nginx-dms
+spec:
+  selector:
+    matchLabels:
+      app: nginx-dms
+  template:
+    metadata:
+      labels:
+        app: nginx-dms
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+#Q. Difference between Daemon set and Deployment?
+#Q. Difference between Stateful set, Daemon set and Deployment? (min 5 points)
+#Ans 
+ Stateful set: 
+ - Manages stateful applications with stable, unique network identities and persistent storage.( Stateful applications are
+  those that maintain data or state across restarts, meaning the application's data and network identity persist over time.)
+ - Pods have unique, stable identities (e.g., pod-0, pod-1) that persist across rescheduling.
+ - Uses persistent volume claims (PVCs) to provide stable storage linked to pod identity. Every stateful set has a 
+  PV(persistant volume) on it.
+ - Pods are scheduled in a specific order; replicas are not started until previous ones are running. 
+ - Use Cases:- Databases (e.g., MySQL, Cassandra), applications requiring stable identity or storage.
+
+ Daemon set:
+ - A DaemonSet ensures that a single instance of a pod is running on each node in a cluster.This is particularly useful
+  for running pods as system daemons or background processes that need to run on every node in the cluster.
+ - Each pod is tied to a specific node, and no two pods run on the same node.
+ - Storage is node-specific and generally ephemeral(temporary storage that exists only during the lifecycle of a pod).
+ - Ensures a pod is scheduled on every eligible node.
+ - use cases:- Logging agents, monitoring daemons, and node-level services.
+
+ Deployment:
+ - Manages stateless applications with replicas of pod.
+ - All pods are identical and interchangeable.
+ - Can use ephemeral storage and PVCs as per the need.
+ - Pods are scheduled independently and can run simultaneously.
+ - use cases:- Stateless web applications, APIs, and batch processing.
+
+
+## JOB
+- If we want a container to run a task the stop after it is done, we use a job. 
+- Jobs are used to run a task to completion.
+# demo job yaml file:
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  completion: 1
+  parallelism: 1
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: busybox:latest # this is a image used to run just commands 
+        command: ["sh",  "-c", "echo Hello World && sleep 10"]
+      restartPolicy: Never
 
 
 ## SERVICES
@@ -395,7 +542,8 @@ spec:
 ## Persistant Volume (PV)
 - When we store data in a pod, it is not persistent. It will be deleted when the pod is restarted or deleted.
 - Persistant volume ensures that the data is stored even after the pod is restarted or deleted.
-- We use PVC(persistant volume claim) to use the PV in our pod. PV can not be used directly in pod.
+- We create to PV to make it available for us to use.
+- PV can not be used directly in pod. We use PVC(persistant volume claim) to use the PV for our pod.
 - The PV should match the PVC(persistant volume claim) in terms of storage size and access mode while writing it in a yaml file.
 
 # demo yaml file of Persistant Volume (PV):-
@@ -470,47 +618,6 @@ the cluster. Then we assigned the PVC as a volume to the pod. The pod can now us
 
  # command 
  imperative way: kubectl create namespace/ns (namespace_name)
-
-#Q. Difference between stateful set and deployment?(interview que)
-
-## Stateful Set
-- Every stateful set has a PV(persistant volume) on it.
-- It is espesally used for Databases
-- It is not deleted instantly.
-- 
-
-## Daemon Set
-- It is used for running a pod on every node in the cluster.
-- It is espesialy used for monitoring.
-- it has a higher priority than deployment.
-- eg:- kubelet, 
-
-#Q. Difference between Daemon set and Deployment?
-#Q. Difference between Stateful set, Daemon set and Deployment? (min 5 points)
-#Ans 
- Stateful set: 
- - Manages stateful applications with stable, unique network identities and persistent storage.( Stateful applications are
-  those that maintain data or state across restarts, meaning the application's data and network identity persist over time.)
- - Pods have unique, stable identities (e.g., pod-0, pod-1) that persist across rescheduling.
- - Uses persistent volume claims (PVCs) to provide stable storage linked to pod identity. Every stateful set has a 
-  PV(persistant volume) on it.
- - Pods are scheduled in a specific order; replicas are not started until previous ones are running. 
- - Use Cases:- Databases (e.g., MySQL, Cassandra), applications requiring stable identity or storage.
-
- Daemon set:
- - A DaemonSet ensures that a single instance of a pod is running on each node in a cluster.This is particularly useful
-  for running pods as system daemons or background processes that need to run on every node in the cluster.
- - Each pod is tied to a specific node, and no two pods run on the same node.
- - Storage is node-specific and generally ephemeral(temporary storage that exists only during the lifecycle of a pod).
- - Ensures a pod is scheduled on every eligible node.
- - use cases:- Logging agents, monitoring daemons, and node-level services.
-
- Deployment:
- - Manages stateless applications with replicas of pod.
- - All pods are identical and interchangeable.
- - Can use ephemeral storage and PVCs as per the need.
- - Pods are scheduled independently and can run simultaneously.
- - use cases:- Stateless web applications, APIs, and batch processing.
 
 
 interview topics:
