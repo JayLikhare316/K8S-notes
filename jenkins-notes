@@ -1,0 +1,6 @@
+>>>JENKINS
+
+CI/CD tool
+git code -> build >> push >> deploy
+devsecops -> git checkout >> git leaks scan >> sonarscan >> build >> image scan >> push on ecr >> deploy
+

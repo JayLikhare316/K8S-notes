@@ -79,7 +79,7 @@ Q.Difference between kubelet and kubeproxy?
 | Interaction	  |Works with the container runtime (e.g., Docker, containerd).	           | Works with network rules (e.g., IP tables, IPVS).                        |
 | Responsibility|Ensures containers are running as per PodSpecs.	                       | Ensures traffic is routed correctly to pods based on Service definitions.|
 | Dependency	  |Directly interacts with the Kubernetes API server and container runtime.| Relies on the Kubernetes API server for Service and Endpoint updates.    |
-=====================================================================================================================================================================
+===============================================>>>======================================================================================================================
 
 ## Creation Of cluster:-[kubernetes]
 
@@ -594,4 +594,3 @@ to check service is running have to implemant probe.
 database cluster k andar banana hai with persistant volume.
 ingress for service access.
 tomcat pod ko resource allocation krna hai =500m [1/2core] cpu request limit 1core , memory =2gbram
-
