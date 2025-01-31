@@ -15,3 +15,5 @@ ins 2 slave -> install java
 
 manage jenkins > nodes > new node (slave permanant agent)
 host = slave ip
+
+you can use it through cloudplugin in jenkins
