@@ -1,6 +1,17 @@
 >>>JENKINS
 
 CI/CD tool
+
 git code -> build >> push >> deploy
 devsecops -> git checkout >> git leaks scan >> sonarscan >> build >> image scan >> push on ecr >> deploy
 
+build timestamp{adding variables in ecr tag timestamp}
+parameters for branch{adding parameter string}
+
+master & node/slave/worker
+# master and slave
+ins 1 master -> install full setup of jenkins
+ins 2 slave -> install java
+
+manage jenkins > nodes > new node (slave permanant agent)
+host = slave ip
