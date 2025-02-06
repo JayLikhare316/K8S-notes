@@ -1,0 +1,67 @@
+# Terraform
+- We use Terraform to manage our IAC(Infrastructure As Code).
+- It is used to create resources on cloud.
+- We cannot make it on premises as it is code.
+- terraform file name --> file_name.tf
+  main.tf --> 
+  provider.tf. --> cloud provider configuration file to define aur service provider.
+  var.tf or variable.tf --> if our terraform file needs some variables we define them here.
+
+ installation - https://developer.hashicorp.com/terraform/install#linux
+
+
+# Steps to initialize the code of terraform
+ step 1: terraform init 
+  initialises the terraform process
+  provider are downloaded and terraform.lock.hcl created
+
+ step 2: terraform plan 
+  will show the plan od infrastructure
+  always check if the things we mentioned are properly mentioned or not.
+
+ step 3: terraform apply
+  will apply our configuration file to the cloud provider.
+  
+  we can apply '--auto-approve' to skip the confirmation prompt.
+
+ To delete
+ terraform destroy --> deletes the infrastructure created by terraform.
+
+
+
+ task 
+ single resource block me 5 s3 bucket create krrni hay
+
+
+
+# EC2 main.tf
+resource "aws_instance" "a" {
+  ami           = "ami-0c50b6f7dc3701ddd" // ami id's are region specific so choose according to your region
+  instance_type = "t2.micro" 
+  key_name = "demo-key" // key pair name
+
+  tags = {
+    Name = "HelloWorld_a"
+  }
+}
+
+# EC provider.tf
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.85.0"
+    }
+  }
+}
+
+provider "aws" {
+  # Configuration options
+  region = "ap-south-1"
+
+  #AWS Credentials
+  access_key =
+  secrete_key = 
+
+}
+
