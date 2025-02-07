@@ -594,3 +594,20 @@ to check service is running have to implemant probe.
 database cluster k andar banana hai with persistant volume.
 ingress for service access.
 tomcat pod ko resource allocation krna hai =500m [1/2core] cpu request limit 1core , memory =2gbram
+
+
+
+
+provider "aws" {
+  region = "us-east-1"  # Set your desired AWS region
+}
+
+resource "aws_s3_bucket" "buckets" {
+  count  = 5  # Creates 5 identical resources
+  bucket = "my-bucket-${count.index + 1}"  # Unique name for each bucket
+
+  # Optional additional configuration
+  tags = {
+    Environment = "Test"
+  }
+}
